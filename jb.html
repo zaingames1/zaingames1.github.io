@@ -86,31 +86,24 @@
 
       .spinner-wrapper {
         position: relative;
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 20px;
+        width: 76px;
+        height: 76px;
+        margin: 0 auto 18px;
+        transform: translateZ(0);
       }
       #spin {
         position: absolute;
         top: 0;
         left: 0;
-        width: 80px;
-        height: 80px;
+        width: 76px;
+        height: 76px;
         border: 4px solid rgba(0, 112, 209, 0.15);
         border-top-color: #00d2ff;
         border-right-color: #818cf8;
         border-radius: 50%;
-        animation: spin 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
-      }
-      .spinner-inner {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        width: 60px;
-        height: 60px;
-        border: 3px dashed rgba(168, 85, 247, 0.4);
-        border-radius: 50%;
-        animation: spin-rev 2s linear infinite;
+        will-change: transform;
+        transform: translateZ(0);
+        animation: spin 0.9s linear infinite;
       }
       .spinner-core {
         position: absolute;
@@ -118,21 +111,12 @@
         left: 50%;
         transform: translate(-50%, -50%);
         font-size: 24px;
-        animation: pulse-core 1.5s ease-in-out infinite;
+        line-height: 1;
       }
       @keyframes spin {
         to {
           transform: rotate(360deg);
         }
-      }
-      @keyframes spin-rev {
-        to {
-          transform: rotate(-360deg);
-        }
-      }
-      @keyframes pulse-core {
-        0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-        50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
       }
 
       .loader-title {
@@ -145,10 +129,10 @@
         font-size: 13px;
         color: #94a3b8;
         line-height: 1.6;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
       }
 
-      /* Animated Glowing Progress Bar */
+      /* Hardware-Accelerated Progress Bar (GPU compositor) */
       .progress-bar-wrap {
         height: 6px;
         background: #1e293b;
@@ -157,21 +141,23 @@
         position: relative;
         margin: 0 auto 20px;
         width: 90%;
+        transform: translateZ(0);
       }
       .progress-bar-shimmer {
         position: absolute;
         top: 0;
         bottom: 0;
         left: 0;
-        width: 100%;
-        background: linear-gradient(90deg, #00d2ff, #818cf8, #a855f7, #00d2ff);
-        background-size: 200% 100%;
-        animation: shimmer 2s linear infinite;
+        width: 50%;
+        background: linear-gradient(90deg, transparent, #00d2ff, #818cf8, transparent);
         border-radius: 999px;
+        will-change: transform;
+        transform: translate3d(-100%, 0, 0);
+        animation: shimmer-beam 1.4s ease-in-out infinite;
       }
-      @keyframes shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
+      @keyframes shimmer-beam {
+        0% { transform: translate3d(-100%, 0, 0); }
+        100% { transform: translate3d(240%, 0, 0); }
       }
 
       .feature-tags {
@@ -206,18 +192,15 @@
         100% { opacity: 1; transform: scale(1); }
       }
       #success-logo {
-        width: 140px;
-        height: 140px;
+        width: 130px;
+        height: 130px;
         border-radius: 20px;
         object-fit: cover;
-        box-shadow: 0 0 30px rgba(16, 185, 129, 0.45), 0 0 60px rgba(56, 189, 248, 0.2);
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
         border: 2px solid rgba(16, 185, 129, 0.6);
         margin-bottom: 16px;
-        animation: pulse-glow 2.5s ease-in-out infinite;
-      }
-      @keyframes pulse-glow {
-        0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(16, 185, 129, 0.45); }
-        50% { transform: scale(1.03); box-shadow: 0 0 45px rgba(16, 185, 129, 0.7); }
+        will-change: transform;
+        transform: translateZ(0);
       }
       .badge-ok {
         display: inline-block;
@@ -467,7 +450,7 @@
 
       <!-- Success Screen -->
       <div id="success">
-        <img id="success-logo" src="Zain2.png" alt="Zain Games" />
+        <img id="success-logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" data-src="Zain2.png" alt="Zain Games" />
         <br />
         <span class="badge-ok">✓ تم التفعيل بنجاح</span>
         <div id="success-title">تم تفعيل الجيلبريك وحقن GoldHEN!</div>
@@ -539,6 +522,20 @@
       </div>
     </div>
 
+    <script>
+      (function () {
+        var obs = new MutationObserver(function () {
+          if (document.body && document.body.classList.contains("done")) {
+            var logo = document.getElementById("success-logo");
+            if (logo && logo.dataset.src && (!logo.src || logo.src.indexOf("data:") === 0)) {
+              logo.src = logo.dataset.src;
+            }
+            obs.disconnect();
+          }
+        });
+        obs.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      })();
+    </script>
     <script type="module">
       import "./jb.js?v=10";
     </script>

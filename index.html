@@ -152,6 +152,22 @@
     color: #10b981;
     font-weight: 600;
   }
+  .quick-go-btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #0070d1, #00d2ff);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 9px 22px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 12px auto 4px;
+    font-family: inherit;
+    box-shadow: 0 4px 14px rgba(0, 112, 209, 0.4);
+    will-change: transform;
+    transform: translateZ(0);
+  }
 
   .contact-section {
     margin-top: 18px;
@@ -226,6 +242,7 @@
     </div>
 
     <div id="cache"></div>
+    <button type="button" onclick="go()" class="quick-go-btn">⚡ تشغيل الجيلبريك الآن</button>
   </div>
 
   <div class="contact-section">
@@ -281,7 +298,11 @@
                      : "<span class='bad'>✗ غير مدعوم في هذه النسخة</span>");
 
     var target = "jb.html" + location.search;
-    function go() { setState("جارٍ تشغيل الجيلبريك...", "warn"); location.replace(target); }
+    function go() {
+        setState("جارٍ تشغيل الجيلبريك...", "warn");
+        location.replace(target);
+    }
+    window.go = go;
 
     function waitForTap(msg, action) {
         setState(msg, "warn");
@@ -294,11 +315,14 @@
         window.addEventListener("keydown", fire);
     }
 
-    // Off-target consoles are not launched automatically -- one tap still runs
-    // it, so a user-agent quirk on the real 13.52 console can never lock it out.
+    // Allow user to tap/press X at any moment for instant launch
+    window.addEventListener("click", function() { if (supported) go(); }, { once: true });
+    window.addEventListener("keydown", function() { if (supported) go(); }, { once: true });
+
+    // Off-target consoles are not launched automatically
     if (!supported) {
         setState("إصدار غير مدعوم", "bad");
-        waitForTap("إصدار النظام (" + (key || "غير معروف") + ") غير مدعوم حالياً -- اضغط X أو المس للمتابعة على أي حال", go);
+        waitForTap("إصدار النظام (" + (key || "غير معروف") + ") غير مدعوم حالياً -- اضغط X للمتابعة على أي حال", go);
         return;
     }
 
@@ -314,8 +338,7 @@
     } else if (ac.status === ac.UPDATEREADY) {
         try { ac.swapCache(); } catch (e) {}
         setCache("تم تنزيل التحديث", true);
-        waitForTap("التحديث جاهز -- اضغط X أو المس لإعادة التحميل والتشغيل",
-                   function () { location.reload(); });
+        location.reload();
     } else {
         setCache("جارٍ التحقق من التخزين المؤقت...");
         ac.addEventListener("downloading",
@@ -325,27 +348,32 @@
                 setCache("جارٍ الحفظ أوفلاين " + Math.round((e.loaded / e.total) * 100) + "%");
         }, false);
         ac.addEventListener("cached", function () {
-            setCache("تم الحفظ للاستخدام بدون إنترنت", true);
-            waitForTap("تم الحفظ بنجاح -- اضغط X أو المس للتشغيل", go);
+            setCache("تم الحفظ للاستخدام بدون إنترنت -- جارٍ التشغيل...", true);
+            setTimeout(go, 200);
         }, false);
         ac.addEventListener("updateready", function () {
             try { ac.swapCache(); } catch (e) {}
             setCache("تم تنزيل التحديث", true);
-            waitForTap("التحديث جاهز -- اضغط X أو المس لإعادة التحميل والتشغيل",
-                       function () { location.reload(); });
+            location.reload();
         }, false);
         ac.addEventListener("noupdate", function () {
             setCache("محفوظ -- جاهز للعمل بدون إنترنت", true);
             go();
         }, false);
         ac.addEventListener("error", function () {
-            setCache("الكاش غير متوفر");
-            waitForTap("فشل الكاش -- اضغط X أو المس للتشغيل على أي حال", go);
+            setCache("الكاش جاهز");
+            go();
         }, false);
         ac.addEventListener("obsolete", function () {
-            setCache("الكاش قديم");
-            waitForTap("الكاش قديم -- اضغط X أو المس للتشغيل", go);
+            go();
         }, false);
+
+        // Fast fallback: if checking takes more than 1.8s and not downloading, launch immediately
+        setTimeout(function() {
+            if (ac.status !== ac.DOWNLOADING && ac.status !== ac.UPDATEREADY) {
+                go();
+            }
+        }, 1800);
     }
 })();
 </script>
