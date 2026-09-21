@@ -1,32 +1,205 @@
 <!DOCTYPE html>
-<html lang="en" manifest="cache.appcache">
+<html lang="ar" dir="rtl" manifest="cache.appcache">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ps4 poops</title>
+<title>Zain Games - تشغيل ثغرة Poops (12.50 - 13.00)</title>
+<link rel="icon" type="image/png" href="ZainGames.png">
 <style>
-  html, body { margin:0; padding:0; background:#0b0d10; color:#c8ced8;
-               font:15px/1.45 "Segoe UI", system-ui, sans-serif; }
-  #wrap { padding:16px 18px; }
-  #state { font-size:22px; font-weight:700; margin:0 0 10px; }
-  #out { white-space:pre-wrap; font:12px/1.45 Consolas, monospace;
-         background:#11151b; border:1px solid #1e2732; border-radius:5px;
-         padding:10px 12px; height:calc(100vh - 141px); overflow-y:auto; }
-  .ok { color:#7fd0a0; } .bad { color:#d08a7f; } .warn { color:#d8c07f; }
-  #brand { text-align:center; padding:8px 10px; background:#0e1116;
-           border-bottom:1px solid #1e2732; }
-  #brand img { width:28px; height:28px; margin-right:8px; border-radius:50%;
-               vertical-align:middle; }
-  #brand b { font-size:15px; font-weight:700; letter-spacing:.14em;
-             color:#e6ebf2; vertical-align:middle; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100vh;
+    background: #080a10 radial-gradient(ellipse at 50% 10%, #151d30 0%, #080a10 80%);
+    color: #cbd5e1;
+    font-family: "Segoe UI", -apple-system, system-ui, Tahoma, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  #brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: #0d121c;
+    border-bottom: 1px solid #1e293b;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .brand-logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  #brand img {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(0, 112, 209, 0.4);
+    vertical-align: middle;
+  }
+  .brand-name {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: .05em;
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand-sub {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: #1e293b;
+    color: #f8fafc;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .back-btn:hover {
+    background: #334155;
+    border-color: #38bdf8;
+    color: #38bdf8;
+  }
+
+  #container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+  #wrap {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+  #wrap::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #0070d1, #a855f7, #00d2ff);
+  }
+  #state {
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0 0 14px;
+    color: #f8fafc;
+    text-align: center;
+  }
+  #out {
+    white-space: pre-wrap;
+    font: 12px/1.45 "Cascadia Code", Consolas, monospace;
+    background: #080a10;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 12px 14px;
+    height: calc(100vh - 280px);
+    min-height: 200px;
+    max-height: 380px;
+    overflow-y: auto;
+    text-align: left;
+    direction: ltr;
+    color: #94a3b8;
+  }
+  .ok { color: #10b981; }
+  .bad { color: #ef4444; }
+  .warn { color: #f59e0b; }
+
+  .contact-section {
+    margin-top: 16px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+  }
+  .contact-head {
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-bottom: 10px;
+  }
+  .contact-grid {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .contact-btn {
+    flex: 1;
+    min-width: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #1e293b;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #f8fafc;
+    border: 1px solid transparent;
+  }
+  .contact-btn.wa {
+    border-color: rgba(37, 211, 102, 0.4);
+    background: rgba(37, 211, 102, 0.08);
+  }
+  .contact-btn.phone {
+    border-color: rgba(0, 112, 209, 0.4);
+    background: rgba(0, 112, 209, 0.08);
+  }
+  .btn-icon { font-size: 16px; }
+  .btn-label { font-size: 10px; color: #94a3b8; display: block; text-align: right; }
+  .btn-val { font-size: 13px; font-weight: 700; color: #f8fafc; }
 </style>
 </head>
 <body>
-<div id="brand"><img src="logo_raw.png" alt="" width="28" height="28"><b>RAW GAME</b></div>
-<div id="wrap">
-  <div id="state">loading poops chain...</div>
-  <div id="out"></div>
+<div id="brand">
+  <div class="brand-logo-wrap">
+    <img src="ZainGames.png" alt="Zain Games">
+    <div class="brand-text">
+      <div class="brand-name">Zain Games</div>
+      <div class="brand-sub">تعديل وصيانة البلايستيشن</div>
+    </div>
+  </div>
+  <a href="../index.html" class="back-btn">⬅ القائمة الرئيسية</a>
 </div>
+
+<div id="container">
+  <div id="wrap">
+    <div id="state">جارٍ تشغيل ثغرة Poops...</div>
+    <div id="out"></div>
+  </div>
+
+  <div class="contact-section">
+    <div class="contact-head">مركز Zain Games &bull; صيانة وتعديل وألعاب &bull; سوهاج</div>
+    <div class="contact-grid">
+      <a href="https://wa.me/201129060303" class="contact-btn wa" target="_blank">
+        <span class="btn-icon">💬</span>
+        <div>
+          <span class="btn-label">واتساب</span>
+          <span class="btn-val" dir="ltr">01129060303</span>
+        </div>
+      </a>
+      <a href="tel:01064430855" class="contact-btn phone">
+        <span class="btn-icon">📞</span>
+        <div>
+          <span class="btn-label">موبايل</span>
+          <span class="btn-val" dir="ltr">01064430855</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
 <script type="module">import "./chain_poops.js";</script>
 </body>
 </html>
