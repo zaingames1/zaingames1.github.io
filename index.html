@@ -1,381 +1,497 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" manifest="cache.appcache">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Zain Games - لخدمات البلايستيشن المتكاملة</title>
-<link rel="icon" type="image/png" href="ZainGames.png">
-<style>
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0; min-height: 100vh;
-    background: #080a10 radial-gradient(ellipse at 50% 10%, #151d30 0%, #080a10 80%);
-    color: #cbd5e1;
-    font-family: "Segoe UI", -apple-system, system-ui, Tahoma, sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-  }
-  #brand {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 12px 16px;
-    background: #0d121c;
-    border-bottom: 1px solid #1e293b;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  }
-  #brand img {
-    width: 40px; height: 40px;
-    border-radius: 8px;
-    box-shadow: 0 0 12px rgba(0, 112, 209, 0.4);
-    vertical-align: middle;
-  }
-  .brand-text {
-    text-align: right;
-  }
-  .brand-name {
-    font-size: 18px;
-    font-weight: 800;
-    color: #f8fafc;
-    letter-spacing: .06em;
-    background: linear-gradient(90deg, #38bdf8, #818cf8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .brand-sub {
-    font-size: 12px;
-    color: #94a3b8;
-    font-weight: 600;
-  }
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Zain Games - المنصة الشاملة لتعديل البلايستيشن</title>
+  <link rel="icon" type="image/png" href="ZainGames.png">
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; min-height: 100vh;
+      background: #080a10 radial-gradient(ellipse at 50% 10%, #151d30 0%, #080a10 80%);
+      color: #cbd5e1;
+      font-family: "Segoe UI", -apple-system, system-ui, Tahoma, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    #brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 14px 20px;
+      background: #0d121c;
+      border-bottom: 1px solid #1e293b;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.45);
+    }
+    #brand img {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      box-shadow: 0 0 14px rgba(0, 112, 209, 0.45);
+      vertical-align: middle;
+    }
+    .brand-text { text-align: right; }
+    .brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
 
-  #container {
-    max-width: 500px;
-    margin: 24px auto;
-    padding: 0 16px;
-  }
-  #wrap {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 18px;
-    padding: 24px 20px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    position: relative;
-    overflow: hidden;
-  }
-  #wrap::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, #0070d1, #a855f7, #00d2ff);
-  }
-  #state {
-    font-size: 21px;
-    font-weight: 800;
-    margin: 0 0 14px;
-    color: #f8fafc;
-  }
-  #det {
-    font-size: 14px;
-    color: #94a3b8;
-    margin: 0 0 16px;
-    padding: 10px 14px;
-    background: #1e293b;
-    border-radius: 12px;
-    display: inline-block;
-  }
-  #det b { color: #f8fafc; font-weight: 700; }
-  .ok {
-    color: #10b981;
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-weight: 700;
-  }
-  .bad {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-weight: 700;
-  }
-  .warn {
-    color: #f59e0b;
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.4);
-    padding: 3px 10px;
-    border-radius: 8px;
-    font-weight: 700;
-  }
+    #container {
+      max-width: 680px;
+      margin: 22px auto 36px;
+      padding: 0 16px;
+    }
 
-  /* Supported Firmwares Box */
-  .fw-box {
-    background: #141d2e;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-  }
-  .fw-title {
-    font-size: 12px;
-    color: #94a3b8;
-    margin-bottom: 8px;
-    font-weight: 600;
-  }
-  .fw-badges {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .fw-badge {
-    background: #1e293b;
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    color: #38bdf8;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 6px;
-  }
+    /* Detected Banner */
+    #detect-banner {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 22px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    #detect-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #0070d1, #a855f7, #00d2ff);
+    }
+    .detect-status {
+      font-size: 17px;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 6px;
+    }
+    .detect-info {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .detect-info b { color: #f8fafc; }
+    .detect-action-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #0070d1, #00d2ff);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(0, 112, 209, 0.4);
+      transition: transform 0.15s ease;
+      font-family: inherit;
+    }
+    .detect-action-btn:hover {
+      transform: translateY(-2px);
+    }
+    .auto-timer-note {
+      font-size: 12px;
+      color: #38bdf8;
+      margin-top: 8px;
+      font-weight: 600;
+    }
 
-  #cache {
-    font-size: 13px;
-    color: #64748b;
-    margin: 4px 0 0;
-    min-height: 18px;
-    font-weight: 500;
-  }
-  #cache.cacheok {
-    color: #10b981;
-    font-weight: 600;
-  }
-  .quick-go-btn {
-    display: inline-block;
-    background: linear-gradient(90deg, #0070d1, #00d2ff);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 9px 22px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    margin: 12px auto 4px;
-    font-family: inherit;
-    box-shadow: 0 4px 14px rgba(0, 112, 209, 0.4);
-    will-change: transform;
-    transform: translateZ(0);
-  }
+    /* Section Title */
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #94a3b8;
+      margin: 0 0 14px 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px; height: 16px;
+      background: #38bdf8;
+      border-radius: 2px;
+    }
 
-  .contact-section {
-    margin-top: 18px;
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 16px;
-    padding: 16px;
-    text-align: center;
-  }
-  .contact-head {
-    font-size: 13px;
-    font-weight: 700;
-    color: #94a3b8;
-    margin-bottom: 12px;
-  }
-  .contact-grid {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .contact-btn {
-    flex: 1;
-    min-width: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: #1e293b;
-    border-radius: 12px;
-    text-decoration: none;
-    color: #f8fafc;
-    border: 1px solid transparent;
-    transition: transform 0.2s ease;
-  }
-  .contact-btn.wa {
-    border-color: rgba(37, 211, 102, 0.4);
-    background: rgba(37, 211, 102, 0.08);
-  }
-  .contact-btn.phone {
-    border-color: rgba(0, 112, 209, 0.4);
-    background: rgba(0, 112, 209, 0.08);
-  }
-  .btn-icon { font-size: 18px; }
-  .btn-label { font-size: 11px; color: #94a3b8; display: block; text-align: right; }
-  .btn-val { font-size: 14px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px; }
-</style>
+    /* Firmware Cards Grid */
+    .fw-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .fw-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .fw-card:hover {
+      transform: translateY(-2px);
+      border-color: #38bdf8;
+      box-shadow: 0 6px 20px rgba(0, 112, 209, 0.2);
+    }
+    .fw-card.highlight {
+      border-color: rgba(56, 189, 248, 0.5);
+      background: #131c31;
+    }
+    .fw-card-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+    .fw-icon {
+      font-size: 24px;
+      width: 46px; height: 46px;
+      min-width: 46px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .fw-text {
+      flex: 1;
+    }
+    .fw-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .fw-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+    .fw-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .tag-gold {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #f59e0b;
+    }
+    .tag-blue {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+    }
+    .tag-green {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+    }
+    .tag-purple {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      color: #c084fc;
+    }
+    .fw-details {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    .fw-arrow-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .fw-card:hover .fw-arrow-btn {
+      background: linear-gradient(90deg, #0070d1, #00d2ff);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    /* Contacts Section */
+    .contact-section {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+    .contact-head {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .contact-grid {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .contact-btn {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #1e293b;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #f8fafc;
+      border: 1px solid transparent;
+      transition: transform 0.2s ease;
+    }
+    .contact-btn.wa {
+      border-color: rgba(37, 211, 102, 0.4);
+      background: rgba(37, 211, 102, 0.08);
+    }
+    .contact-btn.phone {
+      border-color: rgba(0, 112, 209, 0.4);
+      background: rgba(0, 112, 209, 0.08);
+    }
+    .btn-icon { font-size: 18px; }
+    .btn-label { font-size: 11px; color: #94a3b8; display: block; text-align: right; }
+    .btn-val { font-size: 14px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px; }
+
+    @media (max-width: 520px) {
+      .fw-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .fw-arrow-btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-<div id="brand">
-  <img src="ZainGames.png" alt="Zain Games">
-  <div class="brand-text">
-    <div class="brand-name">Zain Games</div>
-    <div class="brand-sub">لخدمات البلايستيشن المتكاملة</div>
+  <!-- Main Brand Header -->
+  <div id="brand">
+    <img src="ZainGames.png" alt="Zain Games">
+    <div class="brand-text">
+      <div class="brand-name">Zain Games</div>
+      <div class="brand-sub">المنصة الشاملة لخدمات وتعديل البلايستيشن</div>
+    </div>
   </div>
-</div>
 
-<div id="container">
-  <div id="wrap">
-    <div id="state">جارٍ فحص إصدار النظام...</div>
-    <div id="det"></div>
-    
-    <div class="fw-box">
-      <div class="fw-title">الإصدارات المدعومة رسمياً في هذه النسخة:</div>
-      <div class="fw-badges">
-        <span class="fw-badge">13.02</span>
-        <span class="fw-badge">13.04</span>
-        <span class="fw-badge">13.50</span>
-        <span class="fw-badge">13.52</span>
+  <div id="container">
+    <!-- Auto-Detection Card -->
+    <div id="detect-banner">
+      <div class="detect-status" id="det-title">جارٍ فحص إصدار جهازك...</div>
+      <div class="detect-info" id="det-desc">يرجى الانتظار بينما نقوم بالتعرف على نظام التشغيل.</div>
+      <div id="det-action-container" style="display:none;">
+        <a id="det-action-btn" href="#" class="detect-action-btn">⚡ تشغيل التعديل المناسب لجهازك</a>
+        <div id="det-timer" class="auto-timer-note"></div>
       </div>
     </div>
 
-    <div id="cache"></div>
-    <button type="button" onclick="go()" class="quick-go-btn">⚡ تشغيل الجيلبريك الآن</button>
-  </div>
+    <!-- Manual Firmware Navigation Grid -->
+    <div class="section-title">أقسام وإصدارات الجيلبريك المتاحة</div>
 
-  <div class="contact-section">
-    <div class="contact-head">مركز Zain Games &bull; صيانة وتعديل وألعاب &bull; سوهاج</div>
-    <div class="contact-grid">
-      <a href="https://wa.me/201129060303" class="contact-btn wa" target="_blank">
-        <span class="btn-icon">💬</span>
-        <div>
-          <span class="btn-label">واتساب</span>
-          <span class="btn-val" dir="ltr">01129060303</span>
+    <div class="fw-grid">
+      <!-- 13.02 - 13.52 -->
+      <a href="jb.html" class="fw-card" id="card-1352">
+        <div class="fw-card-left">
+          <div class="fw-icon">👑</div>
+          <div class="fw-text">
+            <div class="fw-title-row">
+              <span class="fw-name">جيلبريك 13.02 – 13.52</span>
+              <span class="fw-tag tag-gold">GoldHEN & PS4-HEN</span>
+            </div>
+            <div class="fw-details">دعم مقاس بالكامل لأجهزة 13.02, 13.04, 13.50, 13.52 مع باتشات الكيرنل المدمجة.</div>
+          </div>
         </div>
+        <div class="fw-arrow-btn">تشغيل ⬅</div>
       </a>
-      <a href="tel:01064430855" class="contact-btn phone">
-        <span class="btn-icon">📞</span>
-        <div>
-          <span class="btn-label">موبايل</span>
-          <span class="btn-val" dir="ltr">01064430855</span>
+
+      <!-- 11.50 - 13.00 -->
+      <a href="fw1150-1300/index.html" class="fw-card" id="card-1150">
+        <div class="fw-card-left">
+          <div class="fw-icon">⚡</div>
+          <div class="fw-text">
+            <div class="fw-title-row">
+              <span class="fw-name">جيلبريك 11.50 – 13.00</span>
+              <span class="fw-tag tag-blue">Lapse & Poops</span>
+            </div>
+            <div class="fw-details">ثغرات الويب كيت والكيرنل المخصصة للنطاق من 11.50 حتى 13.00.</div>
+          </div>
         </div>
+        <div class="fw-arrow-btn">فتح القسم ⬅</div>
+      </a>
+
+      <!-- 10.50 - 11.20 -->
+      <a href="fw1050-1120/index.html" class="fw-card" id="card-1050">
+        <div class="fw-card-left">
+          <div class="fw-icon">🧰</div>
+          <div class="fw-text">
+            <div class="fw-title-row">
+              <span class="fw-name">حزمة أدوات 10.50 – 11.20</span>
+              <span class="fw-tag tag-purple">PSFree & Suite</span>
+            </div>
+            <div class="fw-details">حزمة مكتبات وثغرات وأدوات متنوعة (PSFree, Lapsus, Poops, etaHEN).</div>
+          </div>
+        </div>
+        <div class="fw-arrow-btn">فتح الحزمة ⬅</div>
+      </a>
+
+      <!-- 7.00 - 9.60 -->
+      <a href="fw700-960/index.html" class="fw-card" id="card-700">
+        <div class="fw-card-left">
+          <div class="fw-icon">🎮</div>
+          <div class="fw-text">
+            <div class="fw-title-row">
+              <span class="fw-name">جيلبريك 7.00 – 9.60</span>
+              <span class="fw-tag tag-green">PSFree Lapse المستقر</span>
+            </div>
+            <div class="fw-details">التعديل المستقر لإصدارات 7.xx و 8.xx و 9.00 و 9.60 عبر المتصفح.</div>
+          </div>
+        </div>
+        <div class="fw-arrow-btn">تشغيل ⬅</div>
       </a>
     </div>
+
+    <!-- Contact & Store Information -->
+    <div class="contact-section">
+      <div class="contact-head">مركز Zain Games &bull; صيانة وتعديل وألعاب &bull; سوهاج</div>
+      <div class="contact-grid">
+        <a href="https://wa.me/201129060303" class="contact-btn wa" target="_blank">
+          <span class="btn-icon">💬</span>
+          <div>
+            <span class="btn-label">واتساب</span>
+            <span class="btn-val" dir="ltr">01129060303</span>
+          </div>
+        </a>
+        <a href="tel:01064430855" class="contact-btn phone">
+          <span class="btn-icon">📞</span>
+          <div>
+            <span class="btn-label">موبايل</span>
+            <span class="btn-val" dir="ltr">01064430855</span>
+          </div>
+        </a>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-(function () {
-    var stateEl = document.getElementById("state");
-    var detEl = document.getElementById("det");
-    var cacheEl = document.getElementById("cache");
-    function setState(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
-    function setCache(t, ok) { cacheEl.textContent = t; cacheEl.className = ok ? "cacheok" : ""; }
-    var params = new URLSearchParams(location.search);
-
-    // Firmwares this build has a MEASURED kernel table for. jb.js still runs its
-    // own kernel-table-present gate, so this is UX only -- an unlisted firmware
-    // can still be launched with a tap. KEEP IN SYNC with ps4_offsets.js: add a
-    // fwnum here in the SAME commit that fills that firmware's kernel RVAs.
-    // The PS4 reports its minor as two hex digits in the UA (13.52 -> minor 0x52).
-    var SUPPORTED = { 1302: 1, 1304: 1, 1350: 1, 1352: 1 }; // all measured on hardware
+  <script>
+  (function () {
+    var titleEl = document.getElementById("det-title");
+    var descEl = document.getElementById("det-desc");
+    var actContainer = document.getElementById("det-action-container");
+    var actBtn = document.getElementById("det-action-btn");
+    var timerEl = document.getElementById("det-timer");
 
     var key = null, fwnum = null;
     var m = /PlayStation\s+4[\/ ](\d+)\.(\d+)/.exec(navigator.userAgent);
     if (m) {
-        var ms = parseInt(m[2], 16).toString(16);
-        if (ms.length < 2) ms = "0" + ms;
-        key = m[1] + "." + ms;
-        fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
+      var ms = parseInt(m[2], 16).toString(16);
+      if (ms.length < 2) ms = "0" + ms;
+      key = m[1] + "." + ms;
+      fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
     }
 
-    var forced = params.get("force") === "1";
-    var supported = forced || (fwnum !== null && SUPPORTED[fwnum] === 1);
-    detEl.innerHTML = "إصدار نظام جهازك: <b>" + (key || "غير معروف") + "</b> &bull; "
-        + (supported ? "<b class='ok'>✓ مدعوم وجاهز للتفعيل</b>"
-                     : "<span class='bad'>✗ غير مدعوم في هذه النسخة</span>");
+    var targetUrl = null;
+    var targetCardId = null;
+    var targetLabel = "";
 
-    var target = "jb.html" + location.search;
-    function go() {
-        setState("جارٍ تشغيل الجيلبريك...", "warn");
-        location.replace(target);
+    if (fwnum !== null) {
+      if (fwnum === 1302 || fwnum === 1304 || fwnum === 1350 || fwnum === 1352) {
+        targetUrl = "jb.html";
+        targetCardId = "card-1352";
+        targetLabel = "جيلبريك 13.02 - 13.52 (GoldHEN)";
+      } else if (fwnum >= 1150 && fwnum <= 1300) {
+        targetUrl = "fw1150-1300/index.html";
+        targetCardId = "card-1150";
+        targetLabel = "جيلبريك 11.50 - 13.00 (Lapse & Poops)";
+      } else if (fwnum >= 1000 && fwnum <= 1120) {
+        targetUrl = "fw1050-1120/index.html";
+        targetCardId = "card-1050";
+        targetLabel = "حزمة أدوات 10.50 - 11.20";
+      } else if (fwnum >= 700 && fwnum <= 960) {
+        targetUrl = "fw700-960/index.html";
+        targetCardId = "card-700";
+        targetLabel = "جيلبريك 7.00 - 9.60 (PSFree Lapse)";
+      }
     }
-    window.go = go;
 
-    function waitForTap(msg, action) {
-        setState(msg, "warn");
-        function fire() {
-            window.removeEventListener("click", fire);
-            window.removeEventListener("keydown", fire);
-            action();
+    if (targetUrl) {
+      titleEl.innerHTML = "تم التعرف على جهازك بنجاح! ✓";
+      descEl.innerHTML = "إصدار نظام الجهاز: <b>PS4 " + key + "</b> &bull; التعديل المناسب: <b>" + targetLabel + "</b>";
+      actBtn.href = targetUrl;
+      actBtn.innerHTML = "⚡ تشغيل " + targetLabel + " الآن";
+      actContainer.style.display = "block";
+
+      if (targetCardId) {
+        var c = document.getElementById(targetCardId);
+        if (c) c.classList.add("highlight");
+      }
+
+      // Auto redirect countdown (3 seconds)
+      var count = 3;
+      timerEl.textContent = "سيتم الانتقال تلقائياً خلال " + count + " ثوانٍ... (أو اضغط X للمتابعة فوراً)";
+      var timer = setInterval(function () {
+        count--;
+        if (count > 0) {
+          timerEl.textContent = "سيتم الانتقال تلقائياً خلال " + count + " ثوانٍ... (أو اضغط X للمتابعة فوراً)";
+        } else {
+          clearInterval(timer);
+          location.replace(targetUrl);
         }
-        window.addEventListener("click", fire);
-        window.addEventListener("keydown", fire);
-    }
+      }, 1000);
 
-    // Allow user to tap/press X at any moment for instant launch
-    window.addEventListener("click", function() { if (supported) go(); }, { once: true });
-    window.addEventListener("keydown", function() { if (supported) go(); }, { once: true });
+      // Fast trigger on button click or tap
+      window.addEventListener("click", function(e) {
+        if (!e.target.closest("a")) {
+          clearInterval(timer);
+          location.replace(targetUrl);
+        }
+      }, { once: true });
+      window.addEventListener("keydown", function() {
+        clearInterval(timer);
+        location.replace(targetUrl);
+      }, { once: true });
 
-    // Off-target consoles are not launched automatically
-    if (!supported) {
-        setState("إصدار غير مدعوم", "bad");
-        waitForTap("إصدار النظام (" + (key || "غير معروف") + ") غير مدعوم حالياً -- اضغط X للمتابعة على أي حال", go);
-        return;
-    }
-
-    var ac = window.applicationCache;
-    if (!ac || !document.documentElement.hasAttribute("manifest")) {
-        go();
-    } else if (!navigator.onLine) {
-        setCache("وضع عدم الاتصال -- تم التحميل من الذاكرة", true);
-        go();
-    } else if (ac.status === ac.IDLE) {
-        setCache("محفوظ في الذاكرة (جاهز أوفلاين)", true);
-        go();
-    } else if (ac.status === ac.UPDATEREADY) {
-        try { ac.swapCache(); } catch (e) {}
-        setCache("تم تنزيل التحديث", true);
-        location.reload();
+    } else if (key) {
+      titleEl.textContent = "تم اكتشاف جهاز PS4 بإصدار " + key;
+      descEl.textContent = "هذا الإصدار غير مدرج ضمن التوجيه التلقائي. يرجى اختيار القسم المناسب يدوياً من القائمة أدناه:";
     } else {
-        setCache("جارٍ التحقق من التخزين المؤقت...");
-        ac.addEventListener("downloading",
-            function () { setCache("جارٍ حفظ الملفات للاستخدام بدون إنترنت (التشغيل الأول)..."); }, false);
-        ac.addEventListener("progress", function (e) {
-            if (e && e.total)
-                setCache("جارٍ الحفظ أوفلاين " + Math.round((e.loaded / e.total) * 100) + "%");
-        }, false);
-        ac.addEventListener("cached", function () {
-            setCache("تم الحفظ للاستخدام بدون إنترنت -- جارٍ التشغيل...", true);
-            setTimeout(go, 200);
-        }, false);
-        ac.addEventListener("updateready", function () {
-            try { ac.swapCache(); } catch (e) {}
-            setCache("تم تنزيل التحديث", true);
-            location.reload();
-        }, false);
-        ac.addEventListener("noupdate", function () {
-            setCache("محفوظ -- جاهز للعمل بدون إنترنت", true);
-            go();
-        }, false);
-        ac.addEventListener("error", function () {
-            setCache("الكاش جاهز");
-            go();
-        }, false);
-        ac.addEventListener("obsolete", function () {
-            go();
-        }, false);
-
-        // Fast fallback: if checking takes more than 1.8s and not downloading, launch immediately
-        setTimeout(function() {
-            if (ac.status !== ac.DOWNLOADING && ac.status !== ac.UPDATEREADY) {
-                go();
-            }
-        }, 1800);
+      titleEl.textContent = "مرحباً بك في منصة Zain Games الشاملة";
+      descEl.textContent = "اختر إصدار نظام جهازك من الأقسام التالية لبدء التعديل:";
     }
-})();
-</script>
+  })();
+  </script>
 </body>
 </html>

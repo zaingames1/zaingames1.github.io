@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Zain Games - حزمة أدوات 10.50 - 11.20</title>
+  <link rel="icon" type="image/png" href="ZainGames.png">
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; min-height: 100vh;
+      background: #080a10 radial-gradient(ellipse at 50% 10%, #151d30 0%, #080a10 80%);
+      color: #cbd5e1;
+      font-family: "Segoe UI", -apple-system, system-ui, Tahoma, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    #brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #0d121c;
+      border-bottom: 1px solid #1e293b;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .brand-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #brand img {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0, 112, 209, 0.4);
+      vertical-align: middle;
+    }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .back-btn:hover {
+      background: #334155;
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    #container {
+      max-width: 680px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .badge-range {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38bdf8;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .main-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #f8fafc;
+      margin: 0 0 6px;
+    }
+    .sub-title {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    /* Tools Grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .tool-card {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 16px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: #38bdf8;
+      box-shadow: 0 8px 25px rgba(0, 112, 209, 0.25);
+    }
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #0070d1, #38bdf8);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+    .tool-icon-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .tool-icon {
+      font-size: 24px;
+      width: 36px; height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 8px;
+    }
+    .tool-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .tool-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      flex-grow: 1;
+    }
+    .tool-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #38bdf8;
+      padding: 6px 12px;
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 6px;
+    }
+
+    .contact-section {
+      margin-top: 18px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+    .contact-head {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .contact-grid {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .contact-btn {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #1e293b;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #f8fafc;
+      border: 1px solid transparent;
+      transition: transform 0.2s ease;
+    }
+    .contact-btn.wa {
+      border-color: rgba(37, 211, 102, 0.4);
+      background: rgba(37, 211, 102, 0.08);
+    }
+    .contact-btn.phone {
+      border-color: rgba(0, 112, 209, 0.4);
+      background: rgba(0, 112, 209, 0.08);
+    }
+    .btn-icon { font-size: 18px; }
+    .btn-label { font-size: 11px; color: #94a3b8; display: block; text-align: right; }
+    .btn-val { font-size: 14px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+  <div id="brand">
+    <div class="brand-logo-wrap">
+      <img src="ZainGames.png" alt="Zain Games">
+      <div class="brand-text">
+        <div class="brand-name">Zain Games</div>
+        <div class="brand-sub">تعديل وصيانة البلايستيشن</div>
+      </div>
+    </div>
+    <a href="../index.html" class="back-btn">⬅ القائمة الرئيسية</a>
+  </div>
+
+  <div id="container">
+    <div class="section-header">
+      <div class="badge-range">نطاق التعديل والأدوات: 10.50 – 11.20</div>
+      <h1 class="main-title">قائمة الأدوات والثغرات</h1>
+      <div class="sub-title">اختر الأداة أو الثغرة المناسبة لتشغيلها على جهازك</div>
+    </div>
+
+    <div class="tools-grid">
+      <!-- PSFree -->
+      <a href="psfree/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">🚀</div>
+          <div class="tool-name">PSFree WebKit</div>
+        </div>
+        <div class="tool-desc">ثغرة الويب كيت السريعة والمستقرة لتشغيل الأكواد والـ Payloads.</div>
+        <div class="tool-action">فتح الثغرة ⬅</div>
+      </a>
+
+      <!-- Lapsus -->
+      <a href="lapsus/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">⚡</div>
+          <div class="tool-name">Lapsus Exploit</div>
+        </div>
+        <div class="tool-desc">تعديل Lapsus عبر المتصفح لاختبار ثغرات النظام.</div>
+        <div class="tool-action">فتح الثغرة ⬅</div>
+      </a>
+
+      <!-- Poops -->
+      <a href="poops/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">🛠️</div>
+          <div class="tool-name">Poops R/W Bootstrap</div>
+        </div>
+        <div class="tool-desc">سلسلة Poops لاختبارات الذاكرة والقراءة والكتابة في الكيرنل.</div>
+        <div class="tool-action">فتح الأداة ⬅</div>
+      </a>
+
+      <!-- Slopkit2 -->
+      <a href="slopkit2/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">📦</div>
+          <div class="tool-name">SlopKit 2 Suite</div>
+        </div>
+        <div class="tool-desc">حزمة متكاملة لأدوات تشغيل الـ Payloads والمكتبات.</div>
+        <div class="tool-action">فتح الحزمة ⬅</div>
+      </a>
+
+      <!-- etaHEN -->
+      <a href="ETAHEN/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">🎮</div>
+          <div class="tool-name">etaHEN Devkit</div>
+        </div>
+        <div class="tool-desc">تفعيل وتثبيت حمولة etaHEN لتشغيل الحزم والألعاب المنزلية.</div>
+        <div class="tool-action">تشغيل etaHEN ⬅</div>
+      </a>
+
+      <!-- FTP -->
+      <a href="FTP/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">📁</div>
+          <div class="tool-name">FTP Server</div>
+        </div>
+        <div class="tool-desc">تشغيل سيرفر FTP لنقل الألعاب والملفات بين الكمبيوتر والجهاز.</div>
+        <div class="tool-action">تشغيل السيرفر ⬅</div>
+      </a>
+
+      <!-- pOOBs4 -->
+      <a href="ps4/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">🗝️</div>
+          <div class="tool-name">pOOBs4 9.00</div>
+        </div>
+        <div class="tool-desc">نسخة ثغرة ExFAT الشهيرة الخاصة بإصدار 9.00.</div>
+        <div class="tool-action">فتح الأداة ⬅</div>
+      </a>
+
+      <!-- IdleSauce -->
+      <a href="idlesauce/index.html" class="tool-card">
+        <div class="tool-icon-title">
+          <div class="tool-icon">🔮</div>
+          <div class="tool-name">IdleSauce Menu</div>
+        </div>
+        <div class="tool-desc">واجهة منسقة لتشغيل حمولات الويب كيت والتحكم الكامل.</div>
+        <div class="tool-action">فتح القائمة ⬅</div>
+      </a>
+    </div>
+
+    <div class="contact-section">
+      <div class="contact-head">مركز Zain Games &bull; صيانة وتعديل وألعاب &bull; سوهاج</div>
+      <div class="contact-grid">
+        <a href="https://wa.me/201129060303" class="contact-btn wa" target="_blank">
+          <span class="btn-icon">💬</span>
+          <div>
+            <span class="btn-label">واتساب</span>
+            <span class="btn-val" dir="ltr">01129060303</span>
+          </div>
+        </a>
+        <a href="tel:01064430855" class="contact-btn phone">
+          <span class="btn-icon">📞</span>
+          <div>
+            <span class="btn-label">موبايل</span>
+            <span class="btn-val" dir="ltr">01064430855</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

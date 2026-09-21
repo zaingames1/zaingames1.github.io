@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Zain Games - جيلبريك 7.00 - 9.60</title>
+  <link rel="icon" type="image/png" href="ZainGames.png">
+  <script src="./bundle.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; min-height: 100vh;
+      background: #080a10 radial-gradient(ellipse at 50% 10%, #151d30 0%, #080a10 80%);
+      color: #cbd5e1;
+      font-family: "Segoe UI", -apple-system, system-ui, Tahoma, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    #brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: #0d121c;
+      border-bottom: 1px solid #1e293b;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .brand-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #brand img {
+      width: 40px; height: 40px;
+      border-radius: 8px;
+      box-shadow: 0 0 12px rgba(0, 112, 209, 0.4);
+      vertical-align: middle;
+    }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .05em;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-sub {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .back-btn:hover {
+      background: #334155;
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    #container {
+      max-width: 540px;
+      margin: 28px auto;
+      padding: 0 16px;
+    }
+    #wrap {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 18px;
+      padding: 26px 22px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    #wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #0070d1, #a855f7, #00d2ff);
+    }
+    .fw-header-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #f8fafc;
+      margin: 0 0 8px;
+    }
+    .fw-sub-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+    .badge-range {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #38bdf8;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+    #jailbreakBtn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(90deg, #0070d1, #00d2ff);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 24px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0, 112, 209, 0.45);
+      font-family: inherit;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+    #jailbreakBtn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 112, 209, 0.6);
+    }
+    #jailbreakBtn:disabled {
+      background: #334155;
+      color: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+    #console {
+      font-family: "Cascadia Code", Consolas, monospace;
+      background: #080a10;
+      color: #e2e8f0;
+      border: 1px solid #1e293b;
+      padding: 14px;
+      border-radius: 12px;
+      margin-top: 20px;
+      text-align: left;
+      direction: ltr;
+      min-height: 100px;
+      max-height: 240px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .contact-section {
+      margin-top: 18px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      text-align: center;
+    }
+    .contact-head {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+    .contact-grid {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .contact-btn {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #1e293b;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #f8fafc;
+      border: 1px solid transparent;
+      transition: transform 0.2s ease;
+    }
+    .contact-btn.wa {
+      border-color: rgba(37, 211, 102, 0.4);
+      background: rgba(37, 211, 102, 0.08);
+    }
+    .contact-btn.phone {
+      border-color: rgba(0, 112, 209, 0.4);
+      background: rgba(0, 112, 209, 0.08);
+    }
+    .btn-icon { font-size: 18px; }
+    .btn-label { font-size: 11px; color: #94a3b8; display: block; text-align: right; }
+    .btn-val { font-size: 14px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px; }
+  </style>
+  <script>
+    if ((window.applicationCache.status == '0') || (window.applicationCache.status == '3')) {
+      window.location.replace("cache.html");
+    }
+  </script>
+</head>
+<body>
+  <div id="brand">
+    <div class="brand-logo-wrap">
+      <img src="ZainGames.png" alt="Zain Games">
+      <div class="brand-text">
+        <div class="brand-name">Zain Games</div>
+        <div class="brand-sub">تعديل وصيانة البلايستيشن</div>
+      </div>
+    </div>
+    <a href="../index.html" class="back-btn">⬅ القائمة الرئيسية</a>
+  </div>
+
+  <div id="container">
+    <div id="wrap">
+      <div class="badge-range">نظام التشغيل: 7.00 – 9.60</div>
+      <h2 class="fw-header-title">تفعيل الجيلبريك (PSFree Lapse)</h2>
+      <div class="fw-sub-desc">اضغط على الزر أدناه لبدء التعديل. يرجى الانتظار حتى اكتمال العملية.</div>
+      
+      <div>
+        <button id="jailbreakBtn">⚡ تشغيل الجيلبريك الآن</button>
+      </div>
+      <pre id="console">[Ready] جاهز للتشغيل. اضغط الزر للبدء...</pre>
+    </div>
+
+    <div class="contact-section">
+      <div class="contact-head">مركز Zain Games &bull; صيانة وتعديل وألعاب &bull; سوهاج</div>
+      <div class="contact-grid">
+        <a href="https://wa.me/201129060303" class="contact-btn wa" target="_blank">
+          <span class="btn-icon">💬</span>
+          <div>
+            <span class="btn-label">واتساب</span>
+            <span class="btn-val" dir="ltr">01129060303</span>
+          </div>
+        </a>
+        <a href="tel:01064430855" class="contact-btn phone">
+          <span class="btn-icon">📞</span>
+          <div>
+            <span class="btn-label">موبايل</span>
+            <span class="btn-val" dir="ltr">01064430855</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const outputConsole = document.getElementById("console");
+    window.log = (msg, color="#38bdf8") => {
+      outputConsole.innerHTML += `<span style="color:${color}">${msg}</span><br>`;
+      outputConsole.scrollTop = outputConsole.scrollHeight;
+    };
+    addEventListener('unhandledrejection', event => {
+      const reason = event.reason;
+      alert('Unhandled rejection\n' + `${reason}\n` + `${reason.sourceURL}:${reason.line}:${reason.column}\n` + `${reason.stack}`);
+    });
+    addEventListener('error', event => {
+      const reason = event.error;
+      alert('Unhandled error\n' + `${reason}\n` + `${reason.sourceURL}:${reason.line}:${reason.column}\n` + `${reason.stack}`);
+      return true;
+    });
+    document.getElementById("jailbreakBtn").addEventListener("click", () => {
+      document.getElementById("jailbreakBtn").disabled = true;
+      outputConsole.textContent = "";
+      window.log("جارٍ تنفيذ ثغرة PSFree Lapse...", "#f59e0b");
+      try {
+        doJBwithPSFreeLapseExploit();
+      } catch (error) {
+        window.log("حدث خطأ أثناء تنفيذ الثغرة: " + error, "#ef4444");
+      }
+    });
+  </script>
+</body>
+</html>
