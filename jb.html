@@ -1,106 +1,365 @@
 <!doctype html>
-<html lang="en" manifest="cache.appcache">
+<html lang="ar" dir="rtl" manifest="cache.appcache">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Zain Games</title>
+    <title>Zain Games - لخدمات البلايستيشن المتكاملة</title>
     <link rel="icon" type="image/png" href="ZainGames.png" />
     <style>
+      * {
+        box-sizing: border-box;
+      }
       html,
       body {
         margin: 0;
         padding: 0;
-        min-height: 100%;
-        background: #0b0d10;
-        color: #c8ced8;
-        font:
-          15px/1.45 "Segoe UI",
-          system-ui,
-          sans-serif;
-      }
-      #brand {
-        text-align: center;
-        padding: 8px 10px;
-        background: #0e1116;
-        border-bottom: 1px solid #1e2732;
-      }
-      #brand img {
-        width: 28px;
-        height: 28px;
-        margin-right: 8px;
-        border-radius: 6px;
-        vertical-align: middle;
-      }
-      #brand b {
+        min-height: 100vh;
+        background: #080a10 radial-gradient(ellipse at 50% 10%, #151d30 0%, #080a10 80%);
+        color: #cbd5e1;
+        font-family: "Segoe UI", -apple-system, system-ui, Tahoma, sans-serif;
         font-size: 15px;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        color: #e6ebf2;
-        vertical-align: middle;
+        line-height: 1.5;
       }
 
-      /* running: a spinner under the brand. jb.js sets body.done / body.fail / body.log. */
+      /* Brand Header */
+      #brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: #0d121c;
+        border-bottom: 1px solid #1e293b;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+      #brand img {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        box-shadow: 0 0 12px rgba(0, 112, 209, 0.4);
+        vertical-align: middle;
+      }
+      .brand-info {
+        text-align: right;
+      }
+      .brand-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #f8fafc;
+        letter-spacing: 0.05em;
+        background: linear-gradient(90deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .brand-sub {
+        font-size: 11px;
+        color: #94a3b8;
+        font-weight: 600;
+      }
+
+      .page-container {
+        max-width: 480px;
+        margin: 28px auto;
+        padding: 0 16px;
+      }
+
+      /* Running / Waiting Box */
+      #loader-box {
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-radius: 20px;
+        padding: 32px 24px;
+        text-align: center;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.55);
+        position: relative;
+        overflow: hidden;
+      }
+      #loader-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00d2ff, #a855f7, #0070d1);
+      }
+
+      .spinner-wrapper {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+      }
       #spin {
-        position: fixed;
-        top: calc(50% + 20px);
-        left: 50%;
-        width: 46px;
-        height: 46px;
-        margin: -23px 0 0 -23px;
-        border: 4px solid #1e2732;
-        border-top-color: #7fd0a0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 80px;
+        border: 4px solid rgba(0, 112, 209, 0.15);
+        border-top-color: #00d2ff;
+        border-right-color: #818cf8;
         border-radius: 50%;
-        animation: spin 0.9s linear infinite;
+        animation: spin 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+      }
+      .spinner-inner {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 60px;
+        height: 60px;
+        border: 3px dashed rgba(168, 85, 247, 0.4);
+        border-radius: 50%;
+        animation: spin-rev 2s linear infinite;
+      }
+      .spinner-core {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        animation: pulse-core 1.5s ease-in-out infinite;
       }
       @keyframes spin {
         to {
           transform: rotate(360deg);
         }
       }
-      #msg {
-        position: fixed;
-        top: 50%;
-        left: 0;
-        right: 0;
-        transform: translateY(-50%);
-        text-align: center;
-        font-size: 16px;
-        letter-spacing: 0.5px;
-        display: none;
+      @keyframes spin-rev {
+        to {
+          transform: rotate(-360deg);
+        }
       }
+      @keyframes pulse-core {
+        0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+        50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+      }
+
+      .loader-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-bottom: 8px;
+      }
+      .loader-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 22px;
+      }
+
+      /* Animated Glowing Progress Bar */
+      .progress-bar-wrap {
+        height: 6px;
+        background: #1e293b;
+        border-radius: 999px;
+        overflow: hidden;
+        position: relative;
+        margin: 0 auto 20px;
+        width: 90%;
+      }
+      .progress-bar-shimmer {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(90deg, #00d2ff, #818cf8, #a855f7, #00d2ff);
+        background-size: 200% 100%;
+        animation: shimmer 2s linear infinite;
+        border-radius: 999px;
+      }
+      @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      .feature-tags {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .f-tag {
+        font-size: 11px;
+        padding: 5px 12px;
+        background: #1e293b;
+        border-radius: 8px;
+        color: #94a3b8;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Success Screen */
       #success {
         display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        background: #0f172a;
+        border: 1px solid rgba(16, 185, 129, 0.5);
+        border-radius: 20px;
+        padding: 30px 22px;
         text-align: center;
-        width: 90%;
-        max-width: 380px;
-        z-index: 10;
+        box-shadow: 0 12px 45px rgba(16, 185, 129, 0.25);
+        animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes popIn {
+        0% { opacity: 0; transform: scale(0.93); }
+        100% { opacity: 1; transform: scale(1); }
       }
       #success-logo {
         width: 140px;
         height: 140px;
-        border-radius: 14px;
-        box-shadow: 0 0 30px rgba(127, 208, 160, 0.4);
-        margin-bottom: 12px;
-        animation: pulse 2s ease-in-out infinite;
+        border-radius: 20px;
+        object-fit: cover;
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.45), 0 0 60px rgba(56, 189, 248, 0.2);
+        border: 2px solid rgba(16, 185, 129, 0.6);
+        margin-bottom: 16px;
+        animation: pulse-glow 2.5s ease-in-out infinite;
       }
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.04); }
+      @keyframes pulse-glow {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(16, 185, 129, 0.45); }
+        50% { transform: scale(1.03); box-shadow: 0 0 45px rgba(16, 185, 129, 0.7); }
+      }
+      .badge-ok {
+        display: inline-block;
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        color: #10b981;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 4px 14px;
+        border-radius: 999px;
+        margin-bottom: 12px;
       }
       #success-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #7fd0a0;
-        margin-bottom: 6px;
+        font-size: 22px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-bottom: 8px;
       }
       #success-desc {
-        font-size: 13px;
-        color: #8b95a3;
+        font-size: 14px;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 18px;
       }
+      .ps-instruction {
+        background: #1e293b;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 13px;
+        color: #38bdf8;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+
+      /* Failure Screen */
+      #msg {
+        display: none;
+        background: #0f172a;
+        border: 1px solid rgba(239, 68, 68, 0.5);
+        border-radius: 20px;
+        padding: 30px 22px;
+        text-align: center;
+        box-shadow: 0 12px 40px rgba(239, 68, 68, 0.2);
+        animation: popIn 0.5s ease;
+      }
+      .badge-fail {
+        display: inline-block;
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: #ef4444;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 4px 14px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+      .msg-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: #f8fafc;
+        margin-bottom: 8px;
+      }
+      .msg-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+      .retry-btn {
+        background: linear-gradient(90deg, #ef4444, #dc2626);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 24px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-bottom: 20px;
+        font-family: inherit;
+      }
+
+      /* Contacts Box */
+      .contact-section {
+        background: #131b2e;
+        border: 1px solid #1e293b;
+        border-radius: 14px;
+        padding: 14px;
+        text-align: center;
+        margin-top: 16px;
+      }
+      .contact-head {
+        font-size: 12px;
+        font-weight: 700;
+        color: #94a3b8;
+        margin-bottom: 10px;
+      }
+      .contact-grid {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .contact-btn {
+        flex: 1;
+        min-width: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 12px;
+        background: #1e293b;
+        border-radius: 10px;
+        text-decoration: none;
+        color: #f8fafc;
+        border: 1px solid transparent;
+      }
+      .contact-btn.wa {
+        border-color: rgba(37, 211, 102, 0.4);
+        background: rgba(37, 211, 102, 0.08);
+      }
+      .contact-btn.phone {
+        border-color: rgba(0, 112, 209, 0.4);
+        background: rgba(0, 112, 209, 0.08);
+      }
+      .btn-icon {
+        font-size: 18px;
+      }
+      .btn-label {
+        font-size: 11px;
+        color: #94a3b8;
+        display: block;
+        text-align: right;
+      }
+      .btn-val {
+        font-size: 14px;
+        font-weight: 700;
+        color: #f8fafc;
+        letter-spacing: 0.5px;
+      }
+
+      /* State Visibility Rules */
       #wrap {
         padding: 0;
       }
@@ -109,26 +368,29 @@
         display: none;
       }
 
-      body.done #spin {
+      body.done #loader-box {
         display: none;
       }
       body.done #success {
         display: block;
       }
-      body.fail #spin {
+
+      body.fail #loader-box {
         display: none;
       }
       body.fail #msg {
         display: block;
       }
 
-      /* ?log=1 -- the full step log, styled like the landing. */
-      body.log #spin,
-      body.log #msg {
-        display: none;
+      /* Developer Log (?log=1) */
+      body.log #loader-box,
+      body.log #msg,
+      body.log #success {
+        display: none !important;
       }
       body.log #wrap {
         padding: 14px 18px;
+        display: block;
       }
       body.log #state {
         display: block;
@@ -139,9 +401,7 @@
       body.log #out {
         display: block;
         white-space: pre-wrap;
-        font:
-          12px/1.45 Consolas,
-          monospace;
+        font: 12px/1.45 Consolas, monospace;
         background: #11151b;
         border: 1px solid #1e2732;
         border-radius: 5px;
@@ -170,25 +430,115 @@
     </style>
   </head>
   <body>
+    <!-- Brand Header -->
     <div id="brand">
-      <img
-        src="data:image/png;base64,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"
-        alt=""
-        width="28"
-        height="28"
-      /><b>Zain Games</b>
+      <img src="ZainGames.png" alt="Zain Games" />
+      <div class="brand-info">
+        <div class="brand-title">Zain Games</div>
+        <div class="brand-sub">لخدمات البلايستيشن المتكاملة</div>
+      </div>
     </div>
-    <div id="spin"></div>
-    <div id="msg">فشلت العملية - يرجى إعادة تشغيل جهازك<br><span style="font-size:13px;color:#8b95a3">Restart your console</span></div>
-    <div id="success">
-      <img id="success-logo" src="Zain2.png" alt="Zain Games" />
-      <div id="success-title">تم تفعيل الجيلبريك بنجاح!</div>
-      <div id="success-desc">Zain Games &middot; تم تشغيل GoldHEN &middot; يمكنك إغلاق المتصفح الآن</div>
+
+    <div class="page-container">
+      <!-- Waiting / Exploit Loading Screen -->
+      <div id="loader-box">
+        <div class="spinner-wrapper">
+          <div id="spin"></div>
+          <div class="spinner-inner"></div>
+          <div class="spinner-core">🎮</div>
+        </div>
+
+        <div class="loader-title">جارٍ تفعيل الجيلبريك وحقن GoldHEN...</div>
+        <div class="loader-desc">
+          يرجى الانتظار بهدوء وعدم إغلاق المتصفح أو الضغط على ذراع التحكم.<br>
+          العملية قيد المعالجة السريعة والآمنة...
+        </div>
+
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-shimmer"></div>
+        </div>
+
+        <div class="feature-tags">
+          <span class="f-tag">⚡ أداء فائق</span>
+          <span class="f-tag">🛡️ حماية الذاكرة</span>
+          <span class="f-tag">🕹️ GoldHEN Ready</span>
+        </div>
+      </div>
+
+      <!-- Success Screen -->
+      <div id="success">
+        <img id="success-logo" src="Zain2.png" alt="Zain Games" />
+        <br />
+        <span class="badge-ok">✓ تم التفعيل بنجاح</span>
+        <div id="success-title">تم تفعيل الجيلبريك وحقن GoldHEN!</div>
+        <div id="success-desc">
+          تم تهيئة النظام وتشغيل GoldHEN بنجاح تام.<br />
+          Zain Games &bull; عالم الألعاب والتعديل الاحترافي
+        </div>
+
+        <div class="ps-instruction">
+          🎮 يمكنك الآن الضغط على زر (PS) في ذراع التحكم للخروج والاستمتاع بكافة الألعاب والتعديلات.
+        </div>
+
+        <div class="contact-section">
+          <div class="contact-head">مركز Zain Games &bull; صيانة وتعديل وألعاب &bull; سوهاج</div>
+          <div class="contact-grid">
+            <a href="https://wa.me/2011129060303" class="contact-btn wa" target="_blank">
+              <span class="btn-icon">💬</span>
+              <div>
+                <span class="btn-label">واتساب</span>
+                <span class="btn-val" dir="ltr">011129060303</span>
+              </div>
+            </a>
+            <a href="tel:0106443085" class="contact-btn phone">
+              <span class="btn-icon">📞</span>
+              <div>
+                <span class="btn-label">موبايل</span>
+                <span class="btn-val" dir="ltr">0106443085</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Failure Screen -->
+      <div id="msg">
+        <span class="badge-fail">⚠️ تعذر اكتمال التفعيل</span>
+        <div class="msg-title">لم تكتمل العملية في هذه المحاولة</div>
+        <div class="msg-desc">
+          قد تحدث مشكلة في استقرار الذاكرة في بعض الأحيان.<br />
+          يُرجى إيقاف تشغيل جهاز البلايستيشن بالكامل وإعادة تشغيله ثم فتح المتصفح مجدداً.
+        </div>
+        <button type="button" onclick="location.reload()" class="retry-btn">إعادة المحاولة الآن</button>
+
+        <div class="contact-section">
+          <div class="contact-head">للدعم الفني والاستفسار &bull; مركز Zain Games &bull; سوهاج</div>
+          <div class="contact-grid">
+            <a href="https://wa.me/2011129060303" class="contact-btn wa" target="_blank">
+              <span class="btn-icon">💬</span>
+              <div>
+                <span class="btn-label">واتساب</span>
+                <span class="btn-val" dir="ltr">011129060303</span>
+              </div>
+            </a>
+            <a href="tel:0106443085" class="contact-btn phone">
+              <span class="btn-icon">📞</span>
+              <div>
+                <span class="btn-label">موبايل</span>
+                <span class="btn-val" dir="ltr">0106443085</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Developer Log Wrapper (?log=1) -->
+      <div id="wrap">
+        <div id="state"></div>
+        <div id="out"></div>
+      </div>
     </div>
-    <div id="wrap">
-      <div id="state"></div>
-      <div id="out"></div>
-    </div>
+
     <script type="module">
       import "./jb.js?v=10";
     </script>
