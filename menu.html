@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Zain Games - المنصة الشاملة لتعديل البلايستيشن - V5</title>
+  <title>Zain Games - المنصة الشاملة لتعديل البلايستيشن - V6</title>
   <link rel="icon" type="image/png" href="ZainGames.png">
   <style>
     * { box-sizing: border-box; }
@@ -56,8 +56,8 @@
       font-weight: 600;
     }
 
-    /* Neon V5 Badge (Hardware Accelerated) */
-    .v5-neon-pill, .v3-neon-pill, .v2-neon-pill {
+    /* Neon V6 Badge (Hardware Accelerated) */
+    .v6-neon-pill, .v5-neon-pill, .v3-neon-pill, .v2-neon-pill {
       display: inline-block;
       font-size: 11px;
       font-weight: 800;
@@ -470,7 +470,7 @@
       <div class="brand-text">
         <div class="brand-name">
           Zain Games
-          <span class="v5-neon-pill">V5</span>
+          <span class="v6-neon-pill">V6</span>
         </div>
         <div class="brand-sub">المنصة الشاملة لخدمات وتعديل البلايستيشن</div>
       </div>
@@ -506,7 +506,7 @@
     <!-- Auto-Detection Card -->
     <div id="detect-banner">
       <div class="detect-status" id="det-title">
-        مرحباً بك في منصة Zain Games الشاملة - <span class="v5-neon-pill">V5</span>
+        مرحباً بك في منصة Zain Games الشاملة - <span class="v6-neon-pill">V6</span>
       </div>
       <div class="detect-info" id="det-desc">اختر إصدار نظام جهازك من الأقسام التالية أو انتظر الفحص التلقائي:</div>
       <div id="det-action-container" style="display:none;">
@@ -673,7 +673,7 @@
     } catch (e) {}
 
     if (isAlreadyJb) {
-      titleEl.innerHTML = "🛡️ تم تفعيل التعديل في هذه الجلسة! ✓ <span class=\"v5-neon-pill\">V5</span>";
+      titleEl.innerHTML = "🛡️ تم تفعيل التعديل في هذه الجلسة! ✓ <span class=\"v6-neon-pill\">V6</span>";
       descEl.innerHTML = "حالة الجهاز: <b>PS4 " + (key || "") + "</b> &bull; التعديل: <b style='color:#34d399;'>GoldHEN نشط ويعمل في الذاكرة ✓</b><br><span style='color:#94a3b8;font-size:12px;'>تم إيقاف تكرار التعديل في هذه الجلسة لحماية جهازك من أي كراش.</span>";
       actContainer.style.display = "block";
 
@@ -722,7 +722,7 @@
         }
       }
     } else if (targetUrl) {
-      titleEl.innerHTML = "تم التعرف على جهازك بنجاح! ✓ <span class=\"v5-neon-pill\">V5</span>";
+      titleEl.innerHTML = "تم التعرف على جهازك بنجاح! ✓ <span class=\"v6-neon-pill\">V6</span>";
       descEl.innerHTML = "إصدار نظام الجهاز: <b>PS4 " + key + "</b> &bull; التعديل المناسب: <b>" + targetLabel + "</b>";
       actBtn.href = targetUrl;
       actBtn.innerHTML = "⚡ تشغيل " + targetLabel + " الآن";
@@ -733,10 +733,10 @@
         if (c) c.classList.add("highlight");
       }
     } else if (key) {
-      titleEl.innerHTML = "تم اكتشاف جهاز PS4 بإصدار " + key + " <span class=\"v5-neon-pill\">V5</span>";
+      titleEl.innerHTML = "تم اكتشاف جهاز PS4 بإصدار " + key + " <span class=\"v6-neon-pill\">V6</span>";
       descEl.textContent = "هذا الإصدار غير مدرج ضمن التوجيه التلقائي. يرجى اختيار القسم المناسب يدوياً من القائمة أدناه:";
     } else {
-      titleEl.innerHTML = "مرحباً بك في منصة Zain Games الشاملة - <span class=\"v5-neon-pill\">V5</span>";
+      titleEl.innerHTML = "مرحباً بك في منصة Zain Games الشاملة - <span class=\"v6-neon-pill\">V6</span>";
       descEl.textContent = "اختر إصدار نظام جهازك من الأقسام التالية لبدء التعديل وحفظ الكاش:";
     }
 
