@@ -78,7 +78,7 @@
       to { box-shadow: 0 0 15px rgba(0, 242, 254, 0.9), 0 0 28px rgba(79, 172, 254, 0.6); }
     }
 
-    /* Offline Status Bar */
+    /* Offline Status Header Badge */
     .offline-badge {
       display: inline-flex;
       align-items: center;
@@ -114,29 +114,71 @@
       padding: 0 16px;
     }
 
-    /* Cache Notification Box */
-    #cache-box {
-      display: none;
+    /* Dedicated Caching Progress Card */
+    .caching-banner {
       background: #0f172a;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 16px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #94a3b8;
+      border: 2px solid #00d2ff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 22px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 210, 255, 0.25);
+      animation: popIn 0.3s ease-out;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .caching-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #f8fafc;
+      margin-bottom: 8px;
+      display: flex;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      justify-content: center;
+      gap: 8px;
     }
-    #cache-box.ready {
-      border-color: rgba(16, 185, 129, 0.4);
-      background: rgba(16, 185, 129, 0.08);
-      color: #34d399;
+    .caching-spinner {
+      width: 16px; height: 16px;
+      border: 3px solid rgba(56, 189, 248, 0.2);
+      border-top-color: #38bdf8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
     }
-    #cache-box.downloading {
-      border-color: rgba(56, 189, 248, 0.4);
-      background: rgba(56, 189, 248, 0.08);
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .caching-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .caching-bar-bg {
+      background: #1e293b;
+      height: 14px;
+      border-radius: 7px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .caching-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #0070d1, #00d2ff);
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
+    }
+    .caching-bar.done {
+      background: linear-gradient(90deg, #10b981, #34d399);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+    }
+    .caching-status-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
       color: #38bdf8;
     }
 
@@ -436,10 +478,25 @@
   </div>
 
   <div id="container">
-    <!-- Offline ApplicationCache Status Banner -->
-    <div id="cache-box">
-      <span class="status-dot" id="cache-dot"></span>
-      <span id="cache-msg">جارٍ التحقق من كاش الأوفلاين...</span>
+    <!-- Dedicated Caching Progress Card (Shown during first-time caching) -->
+    <div id="caching-banner" style="display:none;" class="caching-banner">
+      <div class="caching-title" id="caching-title">
+        <span class="caching-spinner" id="caching-spinner"></span>
+        <span id="caching-title-text">جارٍ تحميل وتثبيت المنصة في ذاكرة الجهاز (أوفلاين)...</span>
+      </div>
+      <div class="caching-desc" id="caching-desc">
+        يرجى الانتظار حتى اكتمال 100% وعدم إغلاق المتصفح أو فصل الإنترنت، لتتمكن من تشغيلها دائماً بدون نت.
+      </div>
+      <div class="caching-bar-bg">
+        <div id="caching-bar" class="caching-bar" style="width: 0%;"></div>
+      </div>
+      <div class="caching-status-row">
+        <span id="caching-pct">0%</span>
+        <span id="caching-count">جارٍ التجهيز...</span>
+      </div>
+      <div id="caching-done-action" style="display:none; margin-top:14px;">
+        <button id="btn-run-after-cache" class="detect-action-btn" type="button">⚡ تشغيل التعديل الآن</button>
+      </div>
     </div>
 
     <!-- Auto-Detection Card -->
@@ -546,72 +603,28 @@
 
   <script>
   (function () {
-    // ApplicationCache Management for 100% Offline Support
-    var cacheBox = document.getElementById("cache-box");
-    var cacheDot = document.getElementById("cache-dot");
-    var cacheMsg = document.getElementById("cache-msg");
+    var isCaching = false;
+    var autoRedirectTimer = null;
+    var targetUrl = null;
+    var targetLabel = "";
+    var targetCardId = null;
+
+    // Caching UI Elements
+    var cachingBanner = document.getElementById("caching-banner");
+    var cachingSpinner = document.getElementById("caching-spinner");
+    var cachingTitleText = document.getElementById("caching-title-text");
+    var cachingDesc = document.getElementById("caching-desc");
+    var cachingBar = document.getElementById("caching-bar");
+    var cachingPct = document.getElementById("caching-pct");
+    var cachingCount = document.getElementById("caching-count");
+    var cachingDoneAction = document.getElementById("caching-done-action");
+    var btnRunAfterCache = document.getElementById("btn-run-after-cache");
+
+    // Top Header Badge
     var topDot = document.getElementById("top-dot");
     var topText = document.getElementById("top-offline-text");
 
-    function setCacheUI(msg, mode) {
-      if (cacheBox) {
-        cacheBox.style.display = "flex";
-        cacheBox.className = mode;
-      }
-      if (cacheMsg) cacheMsg.textContent = msg;
-      if (cacheDot) {
-        cacheDot.className = "status-dot" + (mode === "downloading" ? " downloading" : "");
-      }
-      if (topDot) {
-        topDot.className = "status-dot" + (mode === "downloading" ? " downloading" : "");
-      }
-      if (topText) {
-        if (mode === "ready") topText.textContent = "أوفلاين جاهز ✓";
-        else if (mode === "downloading") topText.textContent = "جارٍ الحفظ...";
-        else topText.textContent = "كاش الأوفلاين";
-      }
-    }
-
-    if (window.applicationCache) {
-      var appCache = window.applicationCache;
-      appCache.addEventListener("checking", function () {
-        setCacheUI("🔍 جارٍ التحقق من ملفات الأوفلاين...", "info");
-      }, false);
-
-      appCache.addEventListener("downloading", function () {
-        setCacheUI("📥 جارٍ تحميل وتثبيت المنصة في جهازك للعمل بدون إنترنت (أوفلاين)...", "downloading");
-      }, false);
-
-      appCache.addEventListener("progress", function (e) {
-        if (e.lengthComputable && e.total > 0) {
-          var pct = Math.round((e.loaded / e.total) * 100);
-          setCacheUI("📥 جارٍ حفظ الأوفلاين: " + pct + "% (" + e.loaded + " من " + e.total + ")", "downloading");
-        } else {
-          setCacheUI("📥 جارٍ حفظ ملفات المنصة في المتصفح...", "downloading");
-        }
-      }, false);
-
-      appCache.addEventListener("cached", function () {
-        setCacheUI("✓ تم حفظ المنصة بنجاح! يمكنك الآن استخدامها بدون إنترنت (أوفلاين).", "ready");
-      }, false);
-
-      appCache.addEventListener("noupdate", function () {
-        setCacheUI("⚡ منصة Zain Games جاهزة ومثبتة للعمل أوفلاين 100% بدون إنترنت.", "ready");
-      }, false);
-
-      appCache.addEventListener("updateready", function () {
-        setCacheUI("⚡ تم تحديث ملفات المنصة! سيتم تطبيق التحديث الآن.", "ready");
-        try { appCache.swapCache(); } catch (err) {}
-      }, false);
-
-      appCache.addEventListener("error", function () {
-        // When device is offline on subsequent visits, error fires because server is unreachable.
-        // This confirms offline cache is functioning!
-        setCacheUI("✓ وضع الأوفلاين نشط (الجهاز يعمل بالكامل بدون اتصال إنترنت).", "ready");
-      }, false);
-    }
-
-    // Auto-detection logic for PS4 Firmware
+    // Firmware Detection UI Elements
     var titleEl = document.getElementById("det-title");
     var descEl = document.getElementById("det-desc");
     var actContainer = document.getElementById("det-action-container");
@@ -619,6 +632,7 @@
     var cancelBtn = document.getElementById("det-cancel-btn");
     var timerEl = document.getElementById("det-timer");
 
+    // PS4 User-Agent Firmware Parser
     var key = null, fwnum = null;
     var m = /PlayStation\s+4[\/ ](\d+)\.(\d+)/.exec(navigator.userAgent);
     if (m) {
@@ -627,10 +641,6 @@
       key = m[1] + "." + ms;
       fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
     }
-
-    var targetUrl = null;
-    var targetCardId = null;
-    var targetLabel = "";
 
     if (fwnum !== null) {
       if (fwnum === 1302 || fwnum === 1304 || fwnum === 1350 || fwnum === 1352) {
@@ -663,35 +673,150 @@
         var c = document.getElementById(targetCardId);
         if (c) c.classList.add("highlight");
       }
-
-      // Auto redirect countdown (3 seconds)
-      var count = 3;
-      timerEl.textContent = "سيتم الانتقال تلقائياً خلال " + count + " ثوانٍ... (أو اضغط زر التشغيل للمتابعة فوراً)";
-      var timer = setInterval(function () {
-        count--;
-        if (count > 0) {
-          timerEl.textContent = "سيتم الانتقال تلقائياً خلال " + count + " ثوانٍ... (أو اضغط زر التشغيل للمتابعة فوراً)";
-        } else {
-          clearInterval(timer);
-          location.replace(targetUrl);
-        }
-      }, 1000);
-
-      // Cancel button action
-      if (cancelBtn) {
-        cancelBtn.addEventListener("click", function(e) {
-          e.preventDefault();
-          clearInterval(timer);
-          timerEl.textContent = "تم إيقاف الانتقال التلقائي. يمكنك اختيار القسم المناسب يدوياً.";
-        });
-      }
-
     } else if (key) {
       titleEl.innerHTML = "تم اكتشاف جهاز PS4 بإصدار " + key + " <span class=\"v2-neon-pill\">V2</span>";
       descEl.textContent = "هذا الإصدار غير مدرج ضمن التوجيه التلقائي. يرجى اختيار القسم المناسب يدوياً من القائمة أدناه:";
     } else {
       titleEl.innerHTML = "مرحباً بك في منصة Zain Games الشاملة - <span class=\"v2-neon-pill\">V2</span>";
       descEl.textContent = "اختر إصدار نظام جهازك من الأقسام التالية لبدء التعديل وحفظ الكاش:";
+    }
+
+    function startAutoRedirect(sec) {
+      if (isCaching) return; // NEVER navigate while ApplicationCache is downloading!
+      if (!targetUrl) return;
+      if (autoRedirectTimer) clearInterval(autoRedirectTimer);
+
+      var count = sec || 3;
+      timerEl.textContent = "سيتم الانتقال تلقائياً خلال " + count + " ثوانٍ... (أو اضغط زر التشغيل للمتابعة فوراً)";
+      autoRedirectTimer = setInterval(function () {
+        if (isCaching) {
+          clearInterval(autoRedirectTimer);
+          autoRedirectTimer = null;
+          return;
+        }
+        count--;
+        if (count > 0) {
+          timerEl.textContent = "سيتم الانتقال تلقائياً خلال " + count + " ثوانٍ... (أو اضغط زر التشغيل للمتابعة فوراً)";
+        } else {
+          clearInterval(autoRedirectTimer);
+          location.replace(targetUrl);
+        }
+      }, 1000);
+    }
+
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (autoRedirectTimer) clearInterval(autoRedirectTimer);
+        timerEl.textContent = "تم إيقاف الانتقال التلقائي. يمكنك اختيار القسم المناسب يدوياً.";
+      });
+    }
+
+    // ApplicationCache Manager - Guarantees 100% Offline Capability
+    var ac = window.applicationCache;
+    if (!ac) {
+      if (targetUrl) startAutoRedirect(3);
+      return;
+    }
+
+    function showCachingActive() {
+      isCaching = true;
+      if (autoRedirectTimer) {
+        clearInterval(autoRedirectTimer);
+        autoRedirectTimer = null;
+      }
+      if (timerEl) timerEl.textContent = "تم إيقاف الانتقال التلقائي مؤقتاً لحفظ ملفات الأوفلاين في جهازك...";
+      if (cachingBanner) cachingBanner.style.display = "block";
+      if (topDot) topDot.className = "status-dot downloading";
+      if (topText) topText.textContent = "جارٍ حفظ الأوفلاين...";
+    }
+
+    ac.addEventListener("checking", function () {
+      if (topText) topText.textContent = "فحص كاش الأوفلاين...";
+    }, false);
+
+    ac.addEventListener("downloading", function () {
+      showCachingActive();
+    }, false);
+
+    ac.addEventListener("progress", function (e) {
+      showCachingActive();
+      if (e.lengthComputable && e.total > 0) {
+        var pct = Math.round((e.loaded / e.total) * 100);
+        if (cachingBar) cachingBar.style.width = pct + "%";
+        if (cachingPct) cachingPct.textContent = pct + "%";
+        if (cachingCount) cachingCount.textContent = "تم حفظ " + e.loaded + " من " + e.total + " ملف";
+      } else {
+        if (cachingBar) cachingBar.style.width = "60%";
+        if (cachingCount) cachingCount.textContent = "جارٍ تثبيت الملفات في الذاكرة...";
+      }
+    }, false);
+
+    ac.addEventListener("cached", function () {
+      isCaching = false;
+      if (cachingBar) {
+        cachingBar.style.width = "100%";
+        cachingBar.className = "caching-bar done";
+      }
+      if (cachingPct) cachingPct.textContent = "100%";
+      if (cachingCount) cachingCount.textContent = "اكتمل الحفظ بنجاح!";
+      if (cachingSpinner) cachingSpinner.style.display = "none";
+      if (cachingTitleText) cachingTitleText.innerHTML = "✓ تم حفظ المنصة بنجاح في جهازك 100%!";
+      if (cachingDesc) {
+        cachingDesc.innerHTML = "<b style='color:#34d399;'>تم تثبيت الكاش بالكامل في متصفح البلايستيشن.</b><br>يمكنك الآن إيقاف تشغيل الإنترنت بأمان واستخدام المنصة في أي وقت أوفلاين دون اتصال!";
+      }
+      if (topDot) topDot.className = "status-dot";
+      if (topText) topText.textContent = "أوفلاين جاهز 100% ✓";
+      if (cachingDoneAction) cachingDoneAction.style.display = "block";
+
+      if (btnRunAfterCache) {
+        btnRunAfterCache.onclick = function () {
+          if (targetUrl) location.replace(targetUrl);
+        };
+      }
+
+      // Allow user 5 seconds to see that caching succeeded, then launch
+      if (targetUrl) {
+        startAutoRedirect(5);
+      }
+    }, false);
+
+    ac.addEventListener("noupdate", function () {
+      // Already completely saved in PS4 ApplicationCache
+      isCaching = false;
+      if (topDot) topDot.className = "status-dot";
+      if (topText) topText.textContent = "أوفلاين جاهز ✓";
+      if (targetUrl) startAutoRedirect(2);
+    }, false);
+
+    ac.addEventListener("updateready", function () {
+      isCaching = false;
+      try { ac.swapCache(); } catch (err) {}
+      location.reload();
+    }, false);
+
+    ac.addEventListener("error", function () {
+      // Offline mode active (cannot reach server to check manifest)
+      isCaching = false;
+      if (topDot) topDot.className = "status-dot";
+      if (topText) topText.textContent = "وضع الأوفلاين ✓";
+      if (targetUrl) startAutoRedirect(2);
+    }, false);
+
+    ac.addEventListener("obsolete", function () {
+      isCaching = false;
+      if (targetUrl) startAutoRedirect(2);
+    }, false);
+
+    // If already in IDLE state on page load, it is already cached
+    if (ac.status === ac.IDLE) {
+      if (topDot) topDot.className = "status-dot";
+      if (topText) topText.textContent = "أوفلاين جاهز ✓";
+      if (targetUrl) startAutoRedirect(2);
+    } else if (!navigator.onLine) {
+      if (topDot) topDot.className = "status-dot";
+      if (topText) topText.textContent = "وضع الأوفلاين ✓";
+      if (targetUrl) startAutoRedirect(2);
     }
   })();
   </script>

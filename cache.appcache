@@ -1,9 +1,10 @@
 ﻿CACHE MANIFEST
-# rev 20260928-zain-games-all-v2-final
+# rev 20260929-zain-games-v2-bulletproof-offline
 
-index.html #3c1312b787da3c5297d1821beb5b2f42fddfe7f8c8770c9b9dfd52a19afb7c6d
+index.html #5745fb430ddd26ba827a6e0929a91f810bf7d56ebb09942a7713a1743c608756
+./ #5745fb430ddd26ba827a6e0929a91f810bf7d56ebb09942a7713a1743c608756
 jb.html #4307b0d8becee28be1f734ee1f7b740aaf041551d801202a51e1e7d7954bcc33
-menu.html #3c1312b787da3c5297d1821beb5b2f42fddfe7f8c8770c9b9dfd52a19afb7c6d
+menu.html #5745fb430ddd26ba827a6e0929a91f810bf7d56ebb09942a7713a1743c608756
 ZainGames.png #09ea818bd506be152a26964f3f9f3ff5f3c3663d56e7621820a463de43fbb9d1
 Zain2.png #17b5f9fd67f5ef9dc16fdb1b845ff83e8c0ce745b0cda883b6431765af9d1c13
 logo_raw.png #09ea818bd506be152a26964f3f9f3ff5f3c3663d56e7621820a463de43fbb9d1
@@ -52,6 +53,8 @@ NETWORK:
 *
 
 FALLBACK:
+/ index.html
+./ index.html
 index.html index.html
 jb.html jb.html
 menu.html index.html
