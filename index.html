@@ -56,7 +56,7 @@
       font-weight: 600;
     }
 
-    /* Neon V3 Badge */
+    /* Neon V3 Badge (Hardware Accelerated) */
     .v3-neon-pill, .v2-neon-pill {
       display: inline-block;
       font-size: 11px;
@@ -66,16 +66,18 @@
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       color: #060b14;
       letter-spacing: 0.8px;
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.7), 0 0 22px rgba(79, 172, 254, 0.4);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.6);
       text-shadow: none;
       vertical-align: middle;
       -webkit-text-fill-color: #060b14;
-      animation: neon-pulse 2s ease-in-out infinite alternate;
+      transform: translateZ(0);
+      will-change: opacity;
+      animation: neon-fade 2.5s ease-in-out infinite alternate;
     }
-    @keyframes neon-pulse {
-      from { box-shadow: 0 0 8px rgba(0, 242, 254, 0.6), 0 0 16px rgba(79, 172, 254, 0.3); }
-      to { box-shadow: 0 0 15px rgba(0, 242, 254, 0.9), 0 0 28px rgba(79, 172, 254, 0.6); }
+    @keyframes neon-fade {
+      from { opacity: 0.88; }
+      to { opacity: 1; }
     }
 
     /* Offline Status Header Badge */
@@ -90,17 +92,19 @@
       background: rgba(16, 185, 129, 0.12);
       border: 1px solid rgba(16, 185, 129, 0.35);
       color: #34d399;
+      transform: translateZ(0);
     }
     .status-dot {
       width: 7px; height: 7px;
       border-radius: 50%;
       background: #10b981;
-      box-shadow: 0 0 8px #10b981;
+      box-shadow: 0 0 6px #10b981;
       display: inline-block;
     }
     .status-dot.downloading {
       background: #38bdf8;
-      box-shadow: 0 0 8px #38bdf8;
+      box-shadow: 0 0 6px #38bdf8;
+      will-change: opacity;
       animation: blink 0.8s infinite alternate;
     }
     @keyframes blink {
@@ -786,7 +790,7 @@
       isCaching = false;
       if (topDot) topDot.className = "status-dot";
       if (topText) topText.textContent = "أوفلاين جاهز ✓";
-      if (targetUrl) startAutoRedirect(2);
+      if (targetUrl) startAutoRedirect(0.8);
     }, false);
 
     ac.addEventListener("updateready", function () {
@@ -800,24 +804,34 @@
       isCaching = false;
       if (topDot) topDot.className = "status-dot";
       if (topText) topText.textContent = "وضع الأوفلاين ✓";
-      if (targetUrl) startAutoRedirect(2);
+      if (targetUrl) startAutoRedirect(0.8);
     }, false);
 
     ac.addEventListener("obsolete", function () {
       isCaching = false;
-      if (targetUrl) startAutoRedirect(2);
+      if (targetUrl) startAutoRedirect(0.8);
     }, false);
 
     // If already in IDLE state on page load, it is already cached
     if (ac.status === ac.IDLE) {
       if (topDot) topDot.className = "status-dot";
       if (topText) topText.textContent = "أوفلاين جاهز ✓";
-      if (targetUrl) startAutoRedirect(2);
+      if (targetUrl) startAutoRedirect(0.8);
     } else if (!navigator.onLine) {
       if (topDot) topDot.className = "status-dot";
       if (topText) topText.textContent = "وضع الأوفلاين ✓";
-      if (targetUrl) startAutoRedirect(2);
+      if (targetUrl) startAutoRedirect(0.8);
     }
+
+    // Instant controller trigger: Pressing X or any key launches immediately without waiting
+    window.addEventListener("keydown", function () {
+      if (targetUrl && !isCaching) location.replace(targetUrl);
+    }, { once: true });
+    window.addEventListener("click", function (e) {
+      if (targetUrl && !isCaching && !e.target.closest("a, button")) {
+        location.replace(targetUrl);
+      }
+    }, { once: true });
   })();
   </script>
 </body>
