@@ -565,7 +565,7 @@
 
           var okBadge = document.querySelector(".badge-ok");
           if (okBadge) {
-            okBadge.textContent = "🛡️ الحماية نشطة • التعديل مفعل مسبقاً";
+            okBadge.textContent = "🛡️ تم التفعيل في هذه الجلسة";
             okBadge.style.background = "rgba(56, 189, 248, 0.15)";
             okBadge.style.borderColor = "rgba(56, 189, 248, 0.4)";
             okBadge.style.color = "#38bdf8";
@@ -577,12 +577,12 @@
           var desc = document.getElementById("success-desc");
           if (desc) {
             desc.innerHTML = "<b style='color:#34d399;'>GoldHEN يعمل بنجاح في ذاكرة الجهاز حالياً.</b><br>" +
-              "تم إيقاف تفعيل الجيلبريك التلقائي لحماية جهازك وتجنب حدوث كراش (Kernel Panic) أو إعادة التشغيل بالخطأ.";
+              "تم إيقاف تكرار التعديل في هذه الجلسة لحماية جهازك من أي كراش.";
           }
 
           var instr = document.querySelector(".ps-instruction");
           if (instr) {
-            instr.innerHTML = "🎮 يمكنك الآن الضغط على زر (PS) في ذراع التحكم للخروج والاستمتاع بألعابك فوراً.";
+            instr.innerHTML = "🎮 يمكنك الآن الضغط على زر (PS) في ذراع التحكم والعودة للألعاب فوراً.";
           }
 
           var logo = document.getElementById("success-logo");
@@ -595,7 +595,7 @@
           actionsWrap.style.cssText = "margin: 16px 0 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;";
           actionsWrap.innerHTML =
             '<a href="index.html" class="contact-btn" style="flex:1; min-width:140px; background:#1e293b; color:#f8fafc; text-decoration:none; padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px; border:1px solid rgba(255,255,255,0.1);">⬅ القائمة الرئيسية</a>' +
-            '<a href="jb.html?force=1" class="contact-btn" style="flex:1; min-width:160px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.4); text-decoration:none; padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px;">⚠️ إعادة التفعيل الإجباري</a>';
+            '<a href="jb.html?force=1" class="contact-btn" style="flex:1; min-width:160px; background:#1e293b; color:#94a3b8; border:1px solid rgba(255,255,255,0.1); text-decoration:none; padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px;">تشغيل التعديل يدوياً</a>';
           
           if (instr && instr.parentNode) {
             instr.parentNode.insertBefore(actionsWrap, instr.nextSibling);
@@ -615,8 +615,6 @@
             try {
               sessionStorage.setItem("ps4_jb_active", "1");
               sessionStorage.setItem("ps4_jb_time", Date.now().toString());
-              localStorage.setItem("ps4_jb_active", "1");
-              localStorage.setItem("ps4_jb_time", Date.now().toString());
             } catch (e) {}
             var logo = document.getElementById("success-logo");
             if (logo && logo.dataset.src && (!logo.src || logo.src.indexOf("data:") === 0)) {

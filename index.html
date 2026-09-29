@@ -673,13 +673,13 @@
     } catch (e) {}
 
     if (isAlreadyJb) {
-      titleEl.innerHTML = "🛡️ تم تفعيل التعديل مسبقاً بنجاح! ✓ <span class=\"v5-neon-pill\">V5</span>";
-      descEl.innerHTML = "حالة الجهاز: <b>PS4 " + (key || "") + "</b> &bull; التعديل: <b style='color:#34d399;'>GoldHEN يعمل بنشاط في الذاكرة ✓</b><br><span style='color:#94a3b8;font-size:12px;'>تم إيقاف التوجيه التلقائي لحماية جهازك من أي كراش أو إعادة تشغيل غير مقصودة.</span>";
+      titleEl.innerHTML = "🛡️ تم تفعيل التعديل في هذه الجلسة! ✓ <span class=\"v5-neon-pill\">V5</span>";
+      descEl.innerHTML = "حالة الجهاز: <b>PS4 " + (key || "") + "</b> &bull; التعديل: <b style='color:#34d399;'>GoldHEN نشط ويعمل في الذاكرة ✓</b><br><span style='color:#94a3b8;font-size:12px;'>تم إيقاف تكرار التعديل في هذه الجلسة لحماية جهازك من أي كراش.</span>";
       actContainer.style.display = "block";
 
       var forceUrl = targetUrl ? (targetUrl + (targetUrl.indexOf("?") === -1 ? "?force=1" : "&force=1")) : "jb.html?force=1";
       actBtn.href = forceUrl;
-      actBtn.innerHTML = "⚠️ تشغيل التعديل مجدداً (إجباري)";
+      actBtn.innerHTML = "تشغيل التعديل يدوياً";
       actBtn.style.background = "#1e293b";
       actBtn.style.border = "1px solid rgba(255,255,255,0.15)";
       actBtn.style.fontSize = "13px";
@@ -716,7 +716,7 @@
           }
           var arrowBtn = c.querySelector(".fw-arrow-btn");
           if (arrowBtn) {
-            arrowBtn.textContent = "إعادة التعديل (إجباري) ⬅";
+            arrowBtn.textContent = "تشغيل التعديل ⬅";
             c.href = forceUrl;
           }
         }
