@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Zain Games - المنصة الشاملة لتعديل البلايستيشن - V3</title>
+  <title>Zain Games - المنصة الشاملة لتعديل البلايستيشن - V5</title>
   <link rel="icon" type="image/png" href="ZainGames.png">
   <style>
     * { box-sizing: border-box; }
@@ -56,8 +56,8 @@
       font-weight: 600;
     }
 
-    /* Neon V3 Badge (Hardware Accelerated) */
-    .v3-neon-pill, .v2-neon-pill {
+    /* Neon V5 Badge (Hardware Accelerated) */
+    .v5-neon-pill, .v3-neon-pill, .v2-neon-pill {
       display: inline-block;
       font-size: 11px;
       font-weight: 800;
@@ -470,7 +470,7 @@
       <div class="brand-text">
         <div class="brand-name">
           Zain Games
-          <span class="v3-neon-pill">V3</span>
+          <span class="v5-neon-pill">V5</span>
         </div>
         <div class="brand-sub">المنصة الشاملة لخدمات وتعديل البلايستيشن</div>
       </div>
@@ -506,7 +506,7 @@
     <!-- Auto-Detection Card -->
     <div id="detect-banner">
       <div class="detect-status" id="det-title">
-        مرحباً بك في منصة Zain Games الشاملة - <span class="v3-neon-pill">V3</span>
+        مرحباً بك في منصة Zain Games الشاملة - <span class="v5-neon-pill">V5</span>
       </div>
       <div class="detect-info" id="det-desc">اختر إصدار نظام جهازك من الأقسام التالية أو انتظر الفحص التلقائي:</div>
       <div id="det-action-container" style="display:none;">
@@ -666,8 +666,63 @@
       }
     }
 
-    if (targetUrl) {
-      titleEl.innerHTML = "تم التعرف على جهازك بنجاح! ✓ <span class=\"v3-neon-pill\">V3</span>";
+    // Check if device was already successfully jailbroken in this session
+    var isAlreadyJb = false;
+    try {
+      isAlreadyJb = (sessionStorage.getItem("ps4_jb_active") === "1");
+    } catch (e) {}
+
+    if (isAlreadyJb) {
+      titleEl.innerHTML = "🛡️ تم تفعيل التعديل مسبقاً بنجاح! ✓ <span class=\"v5-neon-pill\">V5</span>";
+      descEl.innerHTML = "حالة الجهاز: <b>PS4 " + (key || "") + "</b> &bull; التعديل: <b style='color:#34d399;'>GoldHEN يعمل بنشاط في الذاكرة ✓</b><br><span style='color:#94a3b8;font-size:12px;'>تم إيقاف التوجيه التلقائي لحماية جهازك من أي كراش أو إعادة تشغيل غير مقصودة.</span>";
+      actContainer.style.display = "block";
+
+      var forceUrl = targetUrl ? (targetUrl + (targetUrl.indexOf("?") === -1 ? "?force=1" : "&force=1")) : "jb.html?force=1";
+      actBtn.href = forceUrl;
+      actBtn.innerHTML = "⚠️ تشغيل التعديل مجدداً (إجباري)";
+      actBtn.style.background = "#1e293b";
+      actBtn.style.border = "1px solid rgba(255,255,255,0.15)";
+      actBtn.style.fontSize = "13px";
+
+      var playBtn = document.getElementById("btn-play-now");
+      if (!playBtn) {
+        playBtn = document.createElement("div");
+        playBtn.id = "btn-play-now";
+        playBtn.style.cssText = "display:inline-block; background:linear-gradient(90deg, #10b981, #059669); color:#fff; border-radius:10px; padding:10px 22px; font-size:15px; font-weight:800; box-shadow:0 4px 14px rgba(16,185,129,0.4); margin-bottom:8px; width:100%; text-align:center;";
+        playBtn.innerHTML = "🎮 جهازك جاهز تماماً &bull; اضغط زر PS للعب";
+        actBtn.parentNode.insertBefore(playBtn, actBtn);
+      }
+
+      cancelBtn.textContent = "إلغاء وضع الحماية";
+      cancelBtn.onclick = function (e) {
+        e.preventDefault();
+        try {
+          sessionStorage.removeItem("ps4_jb_active");
+          localStorage.removeItem("ps4_jb_active");
+        } catch (err) {}
+        location.reload();
+      };
+
+      if (targetCardId) {
+        var c = document.getElementById(targetCardId);
+        if (c) {
+          c.classList.add("highlight");
+          var nameRow = c.querySelector(".fw-title-row");
+          if (nameRow && !c.querySelector(".tag-active-jb")) {
+            var activeTag = document.createElement("span");
+            activeTag.className = "fw-tag tag-green tag-active-jb";
+            activeTag.textContent = "✓ نشط ومعدل";
+            nameRow.appendChild(activeTag);
+          }
+          var arrowBtn = c.querySelector(".fw-arrow-btn");
+          if (arrowBtn) {
+            arrowBtn.textContent = "إعادة التعديل (إجباري) ⬅";
+            c.href = forceUrl;
+          }
+        }
+      }
+    } else if (targetUrl) {
+      titleEl.innerHTML = "تم التعرف على جهازك بنجاح! ✓ <span class=\"v5-neon-pill\">V5</span>";
       descEl.innerHTML = "إصدار نظام الجهاز: <b>PS4 " + key + "</b> &bull; التعديل المناسب: <b>" + targetLabel + "</b>";
       actBtn.href = targetUrl;
       actBtn.innerHTML = "⚡ تشغيل " + targetLabel + " الآن";
@@ -678,15 +733,16 @@
         if (c) c.classList.add("highlight");
       }
     } else if (key) {
-      titleEl.innerHTML = "تم اكتشاف جهاز PS4 بإصدار " + key + " <span class=\"v3-neon-pill\">V3</span>";
+      titleEl.innerHTML = "تم اكتشاف جهاز PS4 بإصدار " + key + " <span class=\"v5-neon-pill\">V5</span>";
       descEl.textContent = "هذا الإصدار غير مدرج ضمن التوجيه التلقائي. يرجى اختيار القسم المناسب يدوياً من القائمة أدناه:";
     } else {
-      titleEl.innerHTML = "مرحباً بك في منصة Zain Games الشاملة - <span class=\"v3-neon-pill\">V3</span>";
+      titleEl.innerHTML = "مرحباً بك في منصة Zain Games الشاملة - <span class=\"v5-neon-pill\">V5</span>";
       descEl.textContent = "اختر إصدار نظام جهازك من الأقسام التالية لبدء التعديل وحفظ الكاش:";
     }
 
     function startAutoRedirect(sec) {
       if (isCaching) return; // NEVER navigate while ApplicationCache is downloading!
+      if (isAlreadyJb) return; // NEVER auto-redirect when console is already jailbroken!
       if (!targetUrl) return;
       if (autoRedirectTimer) clearInterval(autoRedirectTimer);
 
@@ -825,10 +881,10 @@
 
     // Instant controller trigger: Pressing X or any key launches immediately without waiting
     window.addEventListener("keydown", function () {
-      if (targetUrl && !isCaching) location.replace(targetUrl);
+      if (targetUrl && !isCaching && !isAlreadyJb) location.replace(targetUrl);
     }, { once: true });
     window.addEventListener("click", function (e) {
-      if (targetUrl && !isCaching && !e.target.closest("a, button")) {
+      if (targetUrl && !isCaching && !isAlreadyJb && !e.target.closest("a, button, #btn-play-now")) {
         location.replace(targetUrl);
       }
     }, { once: true });

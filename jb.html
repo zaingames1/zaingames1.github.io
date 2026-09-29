@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Zain Games - لخدمات البلايستيشن المتكاملة</title>
+    <title>Zain Games - لخدمات البلايستيشن المتكاملة - V5</title>
     <link rel="icon" type="image/png" href="ZainGames.png" />
     <link rel="preload" href="core.js?v=10" as="script" crossorigin>
     <link rel="preload" href="jb.js?v=19" as="script" crossorigin>
@@ -58,6 +58,7 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
+      .v5-badge,
       .v3-badge,
       .v2-badge {
         display: inline-block;
@@ -441,7 +442,7 @@
       <div style="display:flex;align-items:center;gap:12px;">
         <img src="ZainGames.png" alt="Zain Games" />
         <div class="brand-info">
-          <div class="brand-title">Zain Games <span class="v3-badge">V3</span></div>
+          <div class="brand-title">Zain Games <span class="v5-badge">V5</span></div>
           <div class="brand-sub">لخدمات البلايستيشن المتكاملة</div>
         </div>
       </div>
@@ -550,8 +551,73 @@
 
     <script>
       (function () {
+        var params = new URLSearchParams(location.search);
+        var force = params.get("force") === "1";
+        var isAlreadyJb = false;
+        try {
+          isAlreadyJb = !force && (sessionStorage.getItem("ps4_jb_active") === "1");
+        } catch (e) {}
+
+        if (isAlreadyJb) {
+          // Device is already jailbroken in this session!
+          // Prevent re-running jb.js to avoid kernel panic / crash
+          document.body.className = "done";
+
+          var okBadge = document.querySelector(".badge-ok");
+          if (okBadge) {
+            okBadge.textContent = "🛡️ الحماية نشطة • التعديل مفعل مسبقاً";
+            okBadge.style.background = "rgba(56, 189, 248, 0.15)";
+            okBadge.style.borderColor = "rgba(56, 189, 248, 0.4)";
+            okBadge.style.color = "#38bdf8";
+          }
+
+          var title = document.getElementById("success-title");
+          if (title) title.innerHTML = "الجهاز معدل بالفعل وGoldHEN نشط!";
+
+          var desc = document.getElementById("success-desc");
+          if (desc) {
+            desc.innerHTML = "<b style='color:#34d399;'>GoldHEN يعمل بنجاح في ذاكرة الجهاز حالياً.</b><br>" +
+              "تم إيقاف تفعيل الجيلبريك التلقائي لحماية جهازك وتجنب حدوث كراش (Kernel Panic) أو إعادة التشغيل بالخطأ.";
+          }
+
+          var instr = document.querySelector(".ps-instruction");
+          if (instr) {
+            instr.innerHTML = "🎮 يمكنك الآن الضغط على زر (PS) في ذراع التحكم للخروج والاستمتاع بألعابك فوراً.";
+          }
+
+          var logo = document.getElementById("success-logo");
+          if (logo) {
+            var src = logo.dataset.src || "Zain2.png";
+            logo.src = src;
+          }
+
+          var actionsWrap = document.createElement("div");
+          actionsWrap.style.cssText = "margin: 16px 0 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;";
+          actionsWrap.innerHTML =
+            '<a href="index.html" class="contact-btn" style="flex:1; min-width:140px; background:#1e293b; color:#f8fafc; text-decoration:none; padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px; border:1px solid rgba(255,255,255,0.1);">⬅ القائمة الرئيسية</a>' +
+            '<a href="jb.html?force=1" class="contact-btn" style="flex:1; min-width:160px; background:rgba(239, 68, 68, 0.15); color:#ef4444; border:1px solid rgba(239, 68, 68, 0.4); text-decoration:none; padding:10px 14px; border-radius:10px; font-weight:700; font-size:13px;">⚠️ إعادة التفعيل الإجباري</a>';
+          
+          if (instr && instr.parentNode) {
+            instr.parentNode.insertBefore(actionsWrap, instr.nextSibling);
+          }
+          return;
+        }
+
+        if (force) {
+          try {
+            sessionStorage.removeItem("ps4_jb_active");
+            localStorage.removeItem("ps4_jb_active");
+          } catch (e) {}
+        }
+
         var obs = new MutationObserver(function () {
           if (document.body && document.body.classList.contains("done")) {
+            try {
+              sessionStorage.setItem("ps4_jb_active", "1");
+              sessionStorage.setItem("ps4_jb_time", Date.now().toString());
+              localStorage.setItem("ps4_jb_active", "1");
+              localStorage.setItem("ps4_jb_time", Date.now().toString());
+            } catch (e) {}
             var logo = document.getElementById("success-logo");
             if (logo && logo.dataset.src && (!logo.src || logo.src.indexOf("data:") === 0)) {
               logo.src = logo.dataset.src;
@@ -560,10 +626,12 @@
           }
         });
         obs.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
+        var s = document.createElement("script");
+        s.type = "module";
+        s.src = "jb.js?v=19";
+        document.body.appendChild(s);
       })();
-    </script>
-    <script type="module">
-      import "./jb.js?v=19";
     </script>
   </body>
 </html>
