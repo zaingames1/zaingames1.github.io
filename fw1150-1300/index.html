@@ -2,13 +2,23 @@
 <html lang="ar" dir="rtl" manifest="cache.appcache">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Zain Games - جيلبريك 11.50 - 13.00</title>
 <link rel="icon" type="image/png" href="ZainGames.png">
 <style>
-  * { box-sizing: border-box; }
-  html, body {
+  *, *::before, *::after { box-sizing: border-box; }
+  html {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden !important;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    width: 100%;
+    max-width: 100vw;
     margin: 0; padding: 0; min-height: 100vh;
+    overflow-x: hidden !important;
+    position: relative;
     background: #080a10 radial-gradient(ellipse at 50% 10%, #151d30 0%, #080a10 80%);
     color: #cbd5e1;
     font-family: "Segoe UI", -apple-system, system-ui, Tahoma, sans-serif;
@@ -16,6 +26,10 @@
     line-height: 1.5;
   }
   #brand {
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
     display: flex;
     align-items: center;
     justify-content: space-between;
