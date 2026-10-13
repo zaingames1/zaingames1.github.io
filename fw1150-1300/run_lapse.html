@@ -200,6 +200,16 @@
   </div>
 </div>
 
-<script type="module">import "./chain_lapse.js";</script>
+<script type="module">
+  // ترويض الذاكرة وتهيئة معالج PS4 قبل إطلاق الثغرة لتقليل نسبة الكراش
+  window.addEventListener("DOMContentLoaded", function () {
+    var state = document.getElementById("state");
+    if (state) state.textContent = "جارٍ استقرار الذاكرة وتهيئة النظام...";
+    setTimeout(function () {
+      if (state) state.textContent = "جارٍ تشغيل ثغرة Lapse...";
+      import("./chain_lapse.js");
+    }, 750);
+  });
+</script>
 </body>
 </html>

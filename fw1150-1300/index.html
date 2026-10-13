@@ -302,8 +302,21 @@
         location.replace(target);
     }
 
+    var autoTimer = null;
+    function scheduleGo(delayMs) {
+        if (autoTimer) clearTimeout(autoTimer);
+        var s = Math.max(1, Math.round(delayMs / 1000));
+        setState("الذاكرة جاهزة -- البدء تلقائياً خلال " + s + " ثانية (أو اضغط البدء الآن)", "ok");
+        autoTimer = setTimeout(function () {
+            go();
+        }, delayMs);
+    }
+
     actionWrap.style.display = "block";
-    goBtn.onclick = go;
+    goBtn.onclick = function () {
+        if (autoTimer) clearTimeout(autoTimer);
+        go();
+    };
 
     function waitForTap(msg, action) {
         setState(msg, "warn");
@@ -316,19 +329,15 @@
         window.addEventListener("keydown", fire);
     }
 
-    // Auto trigger on tap anywhere
-    window.addEventListener("click", function() { go(); }, { once: true });
-    window.addEventListener("keydown", function() { go(); }, { once: true });
-
     var ac = window.applicationCache;
     if (!ac || !document.documentElement.hasAttribute("manifest")) {
-        go();
+        scheduleGo(1200);
     } else if (!navigator.onLine) {
         setCache("وضع عدم الاتصال -- تم التحميل من الكاش", true);
-        go();
+        scheduleGo(1200);
     } else if (ac.status === ac.IDLE) {
         setCache("محفوظ في الذاكرة (أوفلاين جاهز)", true);
-        go();
+        scheduleGo(1200);
     } else if (ac.status === ac.UPDATEREADY) {
         try { ac.swapCache(); } catch (e) {}
         setCache("تم تنزيل التحديث", true);
@@ -344,7 +353,7 @@
 
         ac.addEventListener("cached", function () {
             setCache("تم الحفظ بنجاح أوفلاين", true);
-            setTimeout(go, 200);
+            scheduleGo(1200);
         }, false);
         ac.addEventListener("updateready", function () {
             try { ac.swapCache(); } catch (e) {}
@@ -354,14 +363,14 @@
 
         ac.addEventListener("noupdate", function () {
             setCache("الكاش جاهز للاستخدام بدون إنترنت", true);
-            go();
+            scheduleGo(1200);
         }, false);
         ac.addEventListener("error", function () {
             setCache("الكاش متوفر");
-            go();
+            scheduleGo(1200);
         }, false);
         ac.addEventListener("obsolete", function () {
-            go();
+            scheduleGo(1200);
         }, false);
     }
 })();
